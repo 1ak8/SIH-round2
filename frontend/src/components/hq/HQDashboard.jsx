@@ -12,8 +12,9 @@ import {
   Clock,
   Layers,
   CheckCircle,
+  Award,
 } from 'lucide-react';
-import { adminAPI, applicationAPI } from '../../services/api';
+import { adminAPI, applicationAPI, scrutinyAPI } from '../../services/api';
 import { useApp } from '../../context/AppContext';
 import MetricCard from '../common/MetricCard';
 import RegionalHeatmapChart from './RegionalHeatmapChart';
@@ -74,6 +75,25 @@ export const HQDashboard = () => {
       console.warn('Error loading HQ data, using live cached data');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const [approvingId, setApprovingId] = useState(null);
+
+  const handleGrantApproval = async (appId, collegeName) => {
+    try {
+      setApprovingId(appId);
+      const res = await scrutinyAPI.directApprove(appId, {
+        approvalRemarks: 'Final Statutory Approval granted by Member Secretary & Central AICTE Apex Council (APH 2024-27).',
+      });
+      if (res.data?.success) {
+        showToast(`🎉 Statutory Approval Granted to ${collegeName}! Letter of Approval (LoA) sealed.`, 'success');
+        fetchHQData();
+      }
+    } catch (err) {
+      showToast(err.message || 'Approval grant failed', 'error');
+    } finally {
+      setApprovingId(null);
     }
   };
 
@@ -265,13 +285,33 @@ export const HQDashboard = () => {
                     {app.stage === 'Final Decision' ? 'Council Sealed' : 'On-Site EVC Audit'}
                   </td>
                   <td className="py-3.5 px-4 text-center whitespace-nowrap">
-                    <button
-                      onClick={() => openModal('docket', app)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold transition shadow-2xs cursor-pointer"
-                    >
-                      <ShieldCheck className="w-3.5 h-3.5 text-orange-400" />
-                      <span>{app.status === 'Approved' ? 'View Docket' : 'Review & Seal'}</span>
-                    </button>
+                    {app.status === 'Approved' ? (
+                      <button
+                        onClick={() => openModal('docket', app)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-semibold transition shadow-2xs cursor-pointer"
+                      >
+                        <ShieldCheck className="w-3.5 h-3.5" />
+                        <span>View Official Docket</span>
+                      </button>
+                    ) : (
+                      <div className="flex items-center justify-center gap-1.5">
+                        <button
+                          onClick={() => handleGrantApproval(app.applicationId, app.institutionName)}
+                          disabled={approvingId === app.applicationId}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-xl text-xs font-bold transition shadow-2xs cursor-pointer"
+                        >
+                          <Award className="w-3.5 h-3.5" />
+                          <span>{approvingId === app.applicationId ? 'Sealing...' : 'Grant Approval (Seal)'}</span>
+                        </button>
+                        <button
+                          onClick={() => openModal('docket', app)}
+                          className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-medium transition cursor-pointer"
+                          title="Preview Draft Docket"
+                        >
+                          Preview
+                        </button>
+                      </div>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -302,13 +342,32 @@ export const HQDashboard = () => {
                 <p className="text-xs text-slate-500 mt-0.5">{app.region} Region • {app.applicationType}</p>
               </div>
               <div className="pt-1">
-                <button
-                  onClick={() => openModal('docket', app)}
-                  className="w-full flex items-center justify-center gap-1.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold shadow-2xs cursor-pointer"
-                >
-                  <ShieldCheck className="w-3.5 h-3.5 text-orange-400" />
-                  <span>{app.status === 'Approved' ? 'View Official Docket' : 'Review & Seal Approval'}</span>
-                </button>
+                {app.status === 'Approved' ? (
+                  <button
+                    onClick={() => openModal('docket', app)}
+                    className="w-full flex items-center justify-center gap-1.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-semibold shadow-2xs cursor-pointer"
+                  >
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    <span>View Official Approval Docket</span>
+                  </button>
+                ) : (
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => handleGrantApproval(app.applicationId, app.institutionName)}
+                      disabled={approvingId === app.applicationId}
+                      className="flex items-center justify-center gap-1 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-xl text-xs font-bold shadow-2xs cursor-pointer"
+                    >
+                      <Award className="w-3.5 h-3.5" />
+                      <span>{approvingId === app.applicationId ? 'Sealing...' : 'Approve & Seal'}</span>
+                    </button>
+                    <button
+                      onClick={() => openModal('docket', app)}
+                      className="flex items-center justify-center py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-medium cursor-pointer"
+                    >
+                      Preview
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           ))}
