@@ -7,6 +7,7 @@ import {
   getRulesConfig,
   updateRulesConfig,
   getAuditLogs,
+  reseedDatabaseHandler,
 } from '../controllers/adminController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -19,5 +20,6 @@ router.post('/application/:id/reassign', protect, reassignOfficer);
 router.get('/rules', protect, getRulesConfig);
 router.put('/rules', protect, updateRulesConfig);
 router.get('/audit-logs', protect, getAuditLogs);
+router.post('/reseed', protect, reseedDatabaseHandler);
 
 export default router;

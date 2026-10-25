@@ -12,6 +12,7 @@ import {
   AlertCircle,
   Loader2,
   Clock,
+  FileCheck,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useApp } from '../../context/AppContext';
@@ -325,15 +326,91 @@ export const ApprovalDocketModal = ({ application, onClose }) => {
               <strong>Statutory Compliance Clause:</strong> The Institution shall adhere strictly to the norms, standards, and conditions prescribed by AICTE from time to time. Physical verification and compliance with conditional undertakings remain subject to surprise EVC inspection under Section 10(p) of the AICTE Act.
             </div>
 
+            {/* Multi-Tier Statutory Clearances & Committee Endorsement Register */}
+            <div className="border border-slate-300 rounded-xl overflow-hidden bg-slate-50/70 p-3 sm:p-4">
+              <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-200">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-[#0c2340]" />
+                  <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">
+                    Statutory Clearances & Committee Endorsements
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <CheckCircle2 className="w-3 h-3" />
+                  <span>Chain of Trust: Verified</span>
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {/* Tier 1: RO Scrutiny Clearance Seal */}
+                <div className="p-3 bg-white rounded-lg border-2 border-slate-200 shadow-2xs relative overflow-hidden">
+                  <div className="flex items-start gap-2.5">
+                    <div className="w-9 h-9 rounded-full bg-slate-100 border-2 border-slate-700 flex items-center justify-center shrink-0">
+                      <FileCheck className="w-4 h-4 text-slate-800" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-1 flex-wrap">
+                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
+                          Tier 1 • Regional Bureau
+                        </span>
+                        <span className="text-[10px] font-bold px-1.5 py-0.2 bg-emerald-50 text-emerald-800 border border-emerald-300 rounded">
+                          ✓ Scrutiny Passed
+                        </span>
+                      </div>
+                      <h4 className="text-xs font-bold text-slate-900 mt-0.5">Dr. A. K. Sharma</h4>
+                      <p className="text-[11px] text-slate-600 font-medium">Regional Officer & Scrutiny Bureau Head</p>
+                      <p className="text-[10px] text-slate-500 mt-1 leading-normal">
+                        Mandatory norms, land titles, and AICTE APH cadre ratios verified with zero non-conformances.
+                      </p>
+                      <div className="mt-1.5 pt-1.5 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500 font-mono">
+                        <span>Seal: AICTE-{app.region?.toUpperCase() || 'CENTRAL'}-RO-PASS</span>
+                        <span className="text-emerald-700 font-bold">SHA-256 Validated</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tier 2: EVC Physical Inspection Seal */}
+                <div className="p-3 bg-white rounded-lg border-2 border-emerald-200 shadow-2xs relative overflow-hidden">
+                  <div className="flex items-start gap-2.5">
+                    <div className="w-9 h-9 rounded-full bg-emerald-50 border-2 border-emerald-700 flex items-center justify-center shrink-0">
+                      <Award className="w-4 h-4 text-emerald-700" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-1 flex-wrap">
+                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-800">
+                          Tier 2 • On-Site EVC
+                        </span>
+                        <span className="text-[10px] font-bold px-1.5 py-0.2 bg-emerald-50 text-emerald-800 border border-emerald-300 rounded">
+                          ✓ Physical Audit 100%
+                        </span>
+                      </div>
+                      <h4 className="text-xs font-bold text-slate-900 mt-0.5">
+                        {app.assignedEVC || 'Prof. S. N. Deshmukh'}
+                      </h4>
+                      <p className="text-[11px] text-slate-600 font-medium">Chairman, Expert Visit Committee (NIT Nominee)</p>
+                      <p className="text-[10px] text-slate-500 mt-1 leading-normal">
+                        Geofenced physical audit satisfied. Classrooms, computer labs, and fire safety verified on-site.
+                      </p>
+                      <div className="mt-1.5 pt-1.5 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-500 font-mono">
+                        <span>Geofence: 23.2599° N, 77.4126° E</span>
+                        <span className="text-emerald-700 font-bold">Audit Certified</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Verification and Signatures */}
-            <div className="pt-6 border-t border-slate-200 flex items-end justify-between">
-              {/* QR Code */}
+            <div className="pt-4 border-t border-slate-300 flex flex-col sm:flex-row items-center justify-between gap-4">
+              {/* QR Code Validation */}
               <div className="flex items-center gap-3">
                 <div className="p-1 border-2 border-slate-800 rounded bg-white shrink-0">
                   {app.qrCodeDataUrl ? (
-                    <img src={app.qrCodeDataUrl} alt="QR Code" className="w-20 h-20" />
+                    <img src={app.qrCodeDataUrl} alt="QR Code" className="w-18 h-18 sm:w-20 sm:h-20" />
                   ) : (
-                    <div className="w-20 h-20 bg-slate-100 flex items-center justify-center text-slate-400">
+                    <div className="w-18 h-18 sm:w-20 sm:h-20 bg-slate-100 flex items-center justify-center text-slate-400">
                       <QrCode className="w-10 h-10" />
                     </div>
                   )}
@@ -341,36 +418,53 @@ export const ApprovalDocketModal = ({ application, onClose }) => {
                 <div>
                   <div className="flex items-center gap-1 text-xs font-bold text-emerald-700">
                     <CheckCircle2 className="w-4 h-4" />
-                    <span>{isApproved ? 'Cryptographically Validated' : 'Validation Seed Generated'}</span>
+                    <span>{isApproved ? 'Cryptographically Sealed' : 'Validation Token Generated'}</span>
                   </div>
-                  <p className="text-xs text-slate-500 font-mono mt-0.5 max-w-xs">
+                  <p className="text-[11px] text-slate-500 font-mono mt-0.5 max-w-xs leading-tight">
                     {isApproved
-                      ? 'Scan with any smartphone or AICTE Pravah scanner to verify docket authenticity.'
-                      : 'Digital verification hash will be sealed and committed to ledger upon approval.'}
+                      ? 'AICTE Sovereign Ledger Hash verified. Scan with smartphone to verify docket authenticity.'
+                      : 'Digital verification hash will be sealed and committed upon Council clearance.'}
                   </p>
                 </div>
               </div>
 
-              {/* Council Signature */}
-              <div className="text-right">
-                {isApproved ? (
-                  <>
-                    <div className="w-36 h-10 mx-auto flex items-center justify-center font-serif text-[#0c2340] italic text-base border-b border-slate-400 mb-1">
-                      Dr. Abhay Jere
-                    </div>
-                    <p className="text-xs font-bold text-[#0c2340]">Member Secretary</p>
-                    <p className="text-[11px] text-slate-500">All India Council for Technical Education</p>
-                    <p className="text-[10px] text-emerald-700 font-mono mt-0.5">Digitally Signed & Sealed</p>
-                  </>
-                ) : (
-                  <>
-                    <div className="w-36 h-10 mx-auto flex items-center justify-center font-mono text-amber-600 text-xs border-b border-dashed border-amber-400 mb-1">
-                      [Pending Digital Seal]
-                    </div>
-                    <p className="text-xs font-bold text-slate-500">Member Secretary</p>
-                    <p className="text-[11px] text-slate-400">All India Council for Technical Education</p>
-                  </>
-                )}
+              {/* Committee Rubber Stamps & Apex Signature */}
+              <div className="flex items-center gap-2.5 sm:gap-3 text-center sm:text-right">
+                {/* RO Stamp */}
+                <div className="border border-slate-300 rounded-lg p-1.5 bg-slate-50 text-left font-mono text-[9px] w-24 sm:w-28 shadow-2xs">
+                  <div className="font-extrabold text-slate-700 uppercase tracking-tighter">RO BUREAU</div>
+                  <div className="text-emerald-700 font-bold text-[9px]">CLEARED ✓</div>
+                  <div className="text-slate-500 text-[8px] truncate">Dr. A.K. Sharma</div>
+                </div>
+
+                {/* EVC Stamp */}
+                <div className="border border-emerald-300 rounded-lg p-1.5 bg-emerald-50/60 text-left font-mono text-[9px] w-24 sm:w-28 shadow-2xs">
+                  <div className="font-extrabold text-emerald-800 uppercase tracking-tighter">EVC AUDIT</div>
+                  <div className="text-emerald-700 font-bold text-[9px]">VERIFIED ✓</div>
+                  <div className="text-slate-500 text-[8px] truncate">Prof. Deshmukh</div>
+                </div>
+
+                {/* Apex Council Signature */}
+                <div className="text-center sm:text-right pl-2 border-l border-slate-200">
+                  {isApproved ? (
+                    <>
+                      <div className="w-32 sm:w-36 h-9 mx-auto sm:ml-auto flex items-center justify-center font-serif text-[#0c2340] italic text-sm sm:text-base border-b border-slate-400 mb-0.5">
+                        Dr. Abhay Jere
+                      </div>
+                      <p className="text-[11px] sm:text-xs font-bold text-[#0c2340]">Member Secretary</p>
+                      <p className="text-[10px] text-slate-500">AICTE New Delhi</p>
+                      <p className="text-[9px] text-emerald-700 font-mono mt-0.5">Digitally Sealed</p>
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-32 sm:w-36 h-9 mx-auto sm:ml-auto flex items-center justify-center font-mono text-amber-600 text-xs border-b border-dashed border-amber-400 mb-0.5">
+                        [Pending Seal]
+                      </div>
+                      <p className="text-[11px] sm:text-xs font-bold text-slate-500">Member Secretary</p>
+                      <p className="text-[10px] text-slate-400">AICTE New Delhi</p>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </div>

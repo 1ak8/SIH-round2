@@ -14,6 +14,7 @@ import {
   CheckCircle,
   Award,
   Eye,
+  RotateCw,
 } from 'lucide-react';
 import { adminAPI, applicationAPI, scrutinyAPI } from '../../services/api';
 import { useApp } from '../../context/AppContext';
@@ -98,6 +99,23 @@ export const HQDashboard = () => {
     }
   };
 
+  const [reseeding, setReseeding] = useState(false);
+
+  const handleReseed = async () => {
+    try {
+      setReseeding(true);
+      const res = await adminAPI.reseed();
+      if (res.data?.success) {
+        showToast('✨ Demo dataset refreshed with pan-India colleges, inspections & documents!', 'success');
+        fetchHQData();
+      }
+    } catch (err) {
+      showToast(err.response?.data?.message || err.message || 'Error refreshing demo data', 'error');
+    } finally {
+      setReseeding(false);
+    }
+  };
+
   const handleSimulateBreach = async () => {
     try {
       setSimulating(true);
@@ -138,6 +156,16 @@ export const HQDashboard = () => {
 
         {/* Action Buttons: Responsive Wrap / Grid on Mobile */}
         <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 shrink-0 pt-1 sm:pt-0">
+          <button
+            onClick={handleReseed}
+            disabled={reseeding}
+            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/80 text-xs font-medium rounded-xl shadow-2xs transition cursor-pointer"
+            title="Reload full pan-India demo applications, documents & inspections"
+          >
+            <RotateCw className={`w-3.5 h-3.5 text-slate-500 shrink-0 ${reseeding ? 'animate-spin' : ''}`} />
+            <span className="truncate">{reseeding ? 'Seeding...' : 'Reload Demo Data'}</span>
+          </button>
+
           <button
             onClick={() => setShowRulesModal(true)}
             className="flex items-center justify-center gap-1.5 px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/80 text-xs font-medium rounded-xl shadow-2xs transition cursor-pointer"

@@ -101,6 +101,7 @@ export const adminAPI = {
   getRules: () => api.get('/admin/rules'),
   updateRules: (data) => api.put('/admin/rules', data),
   getAuditLogs: (params) => api.get('/admin/audit-logs', { params }),
+  reseed: () => api.post('/admin/reseed'),
 };
 
 // AI Statutory Compliance Copilot (Google Gemini & APH 2024-27 Engine)

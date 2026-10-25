@@ -217,3 +217,16 @@ export const getAuditLogs = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+export const reseedDatabaseHandler = async (req, res) => {
+  try {
+    const { seedDatabase } = await import('../utils/seedData.js');
+    await seedDatabase();
+    res.json({
+      success: true,
+      message: 'Demo dataset refreshed successfully with pan-India colleges, inspections, and documents!',
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
