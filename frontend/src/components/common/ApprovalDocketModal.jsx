@@ -124,20 +124,20 @@ export const ApprovalDocketModal = ({ application, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-2 sm:p-4 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-2 sm:p-4 md:p-6 overflow-hidden">
       {/* Outer Floating Close Button for easy mobile / desktop exit */}
       <button
         onClick={onClose}
-        className="fixed top-4 right-4 z-50 w-10 h-10 rounded-full bg-slate-900 text-white hover:bg-slate-800 flex items-center justify-center shadow-2xl border border-slate-700 transition cursor-pointer"
+        className="fixed top-3 right-3 sm:top-4 sm:right-4 z-50 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-900/90 text-white hover:bg-slate-800 flex items-center justify-center shadow-2xl border border-slate-700 transition cursor-pointer"
         title="Close (Esc)"
         aria-label="Close"
       >
         <X className="w-5 h-5 stroke-[2.5]" />
       </button>
 
-      <div className="relative bg-white rounded-2xl max-w-3xl w-full shadow-2xl border border-slate-300 overflow-hidden my-4 sm:my-6">
-        {/* Top Control Bar */}
-        <div className="sticky top-0 z-20 bg-gradient-to-r from-rose-950 via-rose-900 to-[#0c2340] text-white px-4 sm:px-6 py-3.5 flex items-center justify-between no-print border-b border-rose-950/30">
+      <div className="relative bg-white rounded-2xl max-w-3xl w-full max-h-[92vh] sm:max-h-[90vh] flex flex-col shadow-2xl border border-slate-300 overflow-hidden print:max-h-none print:overflow-visible print:border-none print:shadow-none animate-in fade-in zoom-in-95 duration-200">
+        {/* Top Control Bar - Always Docked at Top */}
+        <div className="shrink-0 bg-gradient-to-r from-rose-950 via-rose-900 to-[#0c2340] text-white px-4 sm:px-6 py-3 sm:py-3.5 flex items-center justify-between no-print border-b border-rose-950/30">
           <div className="flex items-center gap-2 text-xs font-semibold">
             <span
               className={`w-2.5 h-2.5 rounded-full ${
@@ -198,7 +198,7 @@ export const ApprovalDocketModal = ({ application, onClose }) => {
 
         {/* Actionable Preview Alert Banner for Admin/HQ */}
         {canApprove && (
-          <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200 px-4 sm:px-6 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 no-print">
+          <div className="shrink-0 bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200 px-4 sm:px-6 py-2.5 sm:py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 no-print">
             <div className="flex items-start gap-2.5">
               <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
               <div>
@@ -230,8 +230,12 @@ export const ApprovalDocketModal = ({ application, onClose }) => {
           </div>
         )}
 
-        {/* Printable Official AICTE Docket Document */}
-        <div id="printable-docket" className="p-6 sm:p-8 bg-white text-slate-800 font-sans print:p-0">
+        {/* Scrollable Letter Document Body */}
+        <div className="flex-1 overflow-y-auto p-3 sm:p-6 md:p-8 bg-slate-50/70 print:p-0 print:overflow-visible print:bg-white">
+          <div
+            id="printable-docket"
+            className="bg-white shadow-xs p-6 sm:p-8 rounded-xl border border-slate-200 text-slate-800 font-sans print:p-0 print:shadow-none print:border-none"
+          >
           {/* Draft vs Official Status Strip */}
           {isApproved ? (
             <div className="bg-emerald-50 border border-emerald-200 p-2 rounded-lg text-emerald-800 text-xs text-center font-bold tracking-wide uppercase mb-4 flex items-center justify-center gap-2">
@@ -371,9 +375,10 @@ export const ApprovalDocketModal = ({ application, onClose }) => {
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Bottom Action Footer */}
-        <div className="p-4 sm:px-6 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 no-print">
+      {/* Bottom Action Footer - Always Docked at Bottom */}
+      <div className="shrink-0 p-3 sm:p-4 sm:px-6 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3 no-print">
           <div className="flex items-center gap-2 text-xs text-slate-600">
             <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>
