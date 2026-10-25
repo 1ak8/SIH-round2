@@ -67,27 +67,27 @@ export const EscalationMatrixTable = ({ breachedApplications = [], onReassigned 
       {/* Table Header Banner */}
       <div className="bg-gradient-to-r from-rose-950 via-rose-900 to-[#0c2340] text-white p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white shrink-0">
-            <ShieldAlert className="w-5 h-5 text-white animate-pulse" />
+          <div className="w-9 h-9 rounded-xl bg-white/20 border border-white/30 flex items-center justify-center text-white shrink-0">
+            <ShieldAlert className="w-5 h-5 !text-white animate-pulse" />
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="font-bold text-base sm:text-lg tracking-tight font-sans text-white">
+              <h3 className="font-bold text-base sm:text-lg tracking-tight font-sans !text-white" style={{ color: '#ffffff' }}>
                 Central AICTE SLA Escalation Matrix
               </h3>
-              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-rose-600 text-white border border-rose-400/40">
+              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-rose-600 !text-white border border-rose-400/40" style={{ color: '#ffffff' }}>
                 {breachedApplications.length} Breaches Active
               </span>
             </div>
-            <p className="text-xs text-white/95 font-medium mt-0.5 leading-snug">
+            <p className="text-xs !text-white font-medium mt-0.5 leading-snug" style={{ color: '#ffffff' }}>
               Level 1 (Regional Director) & Level 2 (Member Secretary HQ) Intervention Desk
             </p>
           </div>
         </div>
 
         <div className="text-left sm:text-right text-xs">
-          <span className="text-white/80">Enforcement Authority:</span>{' '}
-          <strong className="text-white font-bold block sm:inline">AICTE HQ, New Delhi</strong>
+          <span className="!text-white/90" style={{ color: 'rgba(255, 255, 255, 0.9)' }}>Enforcement Authority:</span>{' '}
+          <strong className="!text-white font-bold block sm:inline" style={{ color: '#ffffff' }}>AICTE HQ, New Delhi</strong>
         </div>
       </div>
 
