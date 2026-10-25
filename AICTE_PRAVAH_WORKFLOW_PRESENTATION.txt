@@ -1,0 +1,119 @@
+================================================================================
+AICTE PRAVAH - COMPLETE SYSTEM WORKFLOW & VIDEO PRESENTATION SCRIPT
+Problem Statement ID: 26262 (Smart India Hackathon Round 2)
+Title: Integrated Statutory Approval Workflow Automation, Compliance Monitoring,
+       and Alert Management System (Govt. of India e-Governance Standard v3.1)
+================================================================================
+
+--------------------------------------------------------------------------------
+PART 1: 30-SECOND ELEVATOR PITCH & PROBLEM STATEMENT
+--------------------------------------------------------------------------------
+"Namaste Judges! Har saal hazaron technical institutions AICTE approval (EoA / New Institution)
+ke liye apply karte hain. Lekin manual scrutiny, delayed physical inspections, ghost faculties,
+aur expiring NOCs ki wajah se approval process slow, opaque, aur vulnerable ho jata hai.
+
+Is problem ko solve karne ke liye humne develop kiya hai 'AICTE PRAVAH' — ek intelligent,
+geofenced, end-to-end statutory approval aur compliance monitoring engine, jo AICTE ke
+official Approval Process Handbook (APH 2024-27) ke norms par fully automated hai."
+
+
+--------------------------------------------------------------------------------
+PART 2: COMPLETE END-TO-END STEP-BY-STEP LIFECYCLE WORKFLOW
+--------------------------------------------------------------------------------
+
+STAGE 1: COLLEGE / INSTITUTION PORTAL (Application Submission & Live Tracking)
+------------------------------------------------------------------------------
+* Screen: College Role Dashboard (Apex Institute of Technology, Bhopal | AICTE-2026-C-1042)
+1. Live Workflow Stepper: College ko apni application ka 5-stage visual progress tracker
+   dikhta hai: [Draft -> Submitted -> RO Scrutiny -> EVC Physical Audit -> Council Approval].
+2. Statutory Document Uploads:
+   - Land Title / Registered Lease Deed (>30 years contiguous).
+   - Fire Safety NOC from State/Municipal Directorate.
+   - Building Structural Stability Certificate (PWD approved, valid 5 yrs).
+   - Complete Faculty Cadre Roster with PAN & Aadhaar details.
+3. Submit to Council:
+   - College 'Submit Application' par click karta hai.
+   - Application lock ho jaati hai, status 'Under Scrutiny' ban jata hai, aur file
+     automatically Regional Office (RO) ke scrutiny desk par route ho jaati hai.
+
+
+STAGE 2: REGIONAL OFFICER (RO) SCRUTINY DESK (Desk Audit & Anti-Fraud Radar)
+----------------------------------------------------------------------------
+* Screen: RO Role Dashboard (Central Regional Office, Bhopal)
+1. Scrutiny Queue: Regional applications pending queue me aati hain, sorted by SLA days left.
+2. Clause Verification: RO officer documents ko APH 2024-27 norms ke according verify karta hai:
+   - Land Norms: Urban (min 4.0 Acres), Rural (min 7.5 Acres).
+   - Fire & Stability: Validity check.
+3. Automated Ghost Faculty Radar (Anti-Fraud Engine):
+   - System automatically har faculty ke PAN number ko pan-India cross-institution database
+     se cross-check karta hai.
+   - Agar koi faculty doosre college me bhi active roster pe milti hai, to system use instantly
+     'Fraud / Concurrent Tenancy' flag karta hai under APH Clause 4.2.b.
+   - RO ek click me 'Flag Deficiency' mark kar sakta hai, jisse college ko instant notification
+     jata hai rectify karne ke liye.
+4. Recommendation:
+   - Scrutiny pass hone par RO click karta hai 'Recommend for EVC Physical Inspection'.
+   - File automatically next stage (EVC) ko transfer ho jaati hai.
+
+
+STAGE 3: EXPERT VISIT COMMITTEE (EVC) DESK (On-Site Physical Campus Audit)
+--------------------------------------------------------------------------
+* Screen: EVC Committee Chair Dashboard (NIT Nominee Panel)
+1. Blind Allocation: Inspection committee members randomly allocate hote hain taaki koi
+   conflict of interest na ho.
+2. 200-Meter Anti-Spoof Geofenced Verification:
+   - Committee member physically campus visit karta hai.
+   - Portal browser GPS geolocation fetch karke college ke registered coordinates se match
+     karta hai.
+   - Inspection report tabhi unlock hoti hai jab inspector registered campus ke 200m radius
+     ke andar physically present ho.
+3. Geo-Tagged Campus Evidence Upload:
+   - Inspector labs, computer centers (1:4 ratio), workshop, aur Divyangjan barrier-free ramps
+     ki live geo-tagged timestamped photographs capture karke upload karta hai.
+4. Report Submission:
+   - Digital checklist verify karke EVC Chair 'Submit EVC Audit Report' click karta hai.
+   - Application directly Central AICTE HQ ko submit ho jaati hai.
+
+
+STAGE 4: CENTRAL AICTE HQ (Apex Governance & Final Letter of Approval)
+---------------------------------------------------------------------
+* Screen: Central AICTE HQ Console (Member Secretary & Chairman Desk, New Delhi)
+1. National Governance Overview: Pan-India macro metrics: Total Applications, Approvals,
+   Deficiencies, aur SLA breaches across all regions.
+2. SLA Escalation Matrix:
+   - Agar kisi regional desk par application statutory SLA limit (e.g. 7 days) se zyada delay
+     hoti hai, to system automated time-warp alert trigger karke use 'Level-2 Central HQ Desk'
+     par escalate kar deta hai. (Demo button: 'Simulate SLA Breach +10d').
+3. Final Approval Decision:
+   - Council EVC report aur RO recommendations check karke 'Approve Application' par click karti hai.
+4. One-Click Digital Approval Docket:
+   - System instantly official, digitally signed, QR-Coded AICTE Letter of Approval (LoA)
+     generate karta hai with intake breakdown, verified norms, and encrypted QR validation.
+
+
+--------------------------------------------------------------------------------
+PART 3: CORE BACKGROUND ENGINES & COMPLIANCE DIFFERENTIATORS
+--------------------------------------------------------------------------------
+
+1. Automated Validity Watchdog (Radar Tab):
+   - 365-day proactive radar jo Fire NOC, Structural Certificate, aur Affiliations ki expiry
+     track karta hai. 60 din pehle automated alerts dispatch karta hai taaki compliance
+     lapse na ho.
+
+2. AICTE Pravah Sahayak (AI Statutory Copilot):
+   - Bottom-right corner me live floating chatbot powered by Google Gemini AI.
+   - APH 2024-27 handbook ke rules par trained: Land norms, 1:20 cadre ratio, EVC guidelines,
+     Hindi/English dono me real-time conversational answers deta hai.
+
+3. Immutable Audit Trail (Audit Logs Tab):
+   - Har single interaction, status change, document upload, aur SLA breach timestamp, user ID,
+     aur IP ke saath permanently log hota hai for 100% transparency.
+
+
+--------------------------------------------------------------------------------
+PART 4: 15-SECOND CLOSING PUNCHLINE
+--------------------------------------------------------------------------------
+"In summary, AICTE Pravah statutory approvals ko paperless, 100% transparent, anti-fraud,
+aur time-bound banata hai — making the vision of automated, proactive e-Governance a reality.
+Thank you!"
+================================================================================

@@ -1,36 +1,122 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
-import { X, Printer, ShieldCheck, QrCode, Download, Building2, CheckCircle2 } from 'lucide-react';
+import {
+  X,
+  Printer,
+  ShieldCheck,
+  QrCode,
+  Download,
+  Building2,
+  CheckCircle2,
+  Award,
+  AlertCircle,
+  Loader2,
+  Clock,
+} from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { useApp } from '../../context/AppContext';
+import { scrutinyAPI } from '../../services/api';
 
 export const ApprovalDocketModal = ({ application, onClose }) => {
-  useEffect(() => {
-    // Fire celebratory confetti on opening the official docket!
-    confetti({
-      particleCount: 80,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#ea580c', '#0c2340', '#059669', '#d97706'],
-    });
-  }, []);
+  const { activeRole } = useAuth();
+  const { showToast, triggerRefresh } = useApp();
+  const [approving, setApproving] = useState(false);
 
-  const app = application || {
-    applicationId: 'AICTE-2026-C-1042',
-    institutionName: 'Apex Institute of Technology, Bhopal',
-    applicationType: 'Extension of Approval (EoA)',
-    academicYear: '2026-2027',
-    region: 'Central',
-    status: 'Approved',
-    infrastructureDetails: {
+  const [app, setApp] = useState(() => ({
+    applicationId: application?.applicationId || 'AICTE-2026-C-1042',
+    institutionName: application?.institutionName || 'Apex Institute of Technology, Bhopal',
+    applicationType: application?.applicationType || 'Extension of Approval (EoA)',
+    academicYear: application?.academicYear || '2026-2027',
+    region: application?.region || 'Central',
+    status: application?.status || 'Approved',
+    stage: application?.stage || 'Final Decision',
+    infrastructureDetails: application?.infrastructureDetails || {
       address: 'Bhadbhada Road, Suraj Nagar, Bhopal, MP - 462044',
       landAreaAcres: 6.2,
       builtUpAreaSqMtr: 14200,
     },
-    courses: [
-      { courseName: 'B.Tech', branch: 'Computer Science & Engineering', level: 'UG', proposedIntake: 180, approvedIntake: 120 },
-      { courseName: 'B.Tech', branch: 'Artificial Intelligence & Data Science', level: 'UG', proposedIntake: 60, approvedIntake: 60 },
-      { courseName: 'B.Tech', branch: 'Electronics & Communication', level: 'UG', proposedIntake: 60, approvedIntake: 60 },
-    ],
-    qrCodeDataUrl: '',
+    courses:
+      application?.courses && application.courses.length > 0
+        ? application.courses
+        : [
+            { courseName: 'B.Tech', branch: 'Computer Science & Engineering', level: 'UG', proposedIntake: 180, approvedIntake: 120 },
+            { courseName: 'B.Tech', branch: 'Artificial Intelligence & Data Science', level: 'UG', proposedIntake: 60, approvedIntake: 60 },
+            { courseName: 'B.Tech', branch: 'Electronics & Communication', level: 'UG', proposedIntake: 60, approvedIntake: 60 },
+          ],
+    qrCodeDataUrl: application?.qrCodeDataUrl || '',
+  }));
+
+  const isApproved = app.status === 'Approved';
+  const canApprove = (activeRole === 'hq' || activeRole === 'admin') && !isApproved;
+
+  useEffect(() => {
+    if (application) {
+      setApp({
+        applicationId: application.applicationId || 'AICTE-2026-C-1042',
+        institutionName: application.institutionName || 'Apex Institute of Technology, Bhopal',
+        applicationType: application.applicationType || 'Extension of Approval (EoA)',
+        academicYear: application.academicYear || '2026-2027',
+        region: application.region || 'Central',
+        status: application.status || 'Approved',
+        stage: application.stage || 'Final Decision',
+        infrastructureDetails: application.infrastructureDetails || {
+          address: 'Bhadbhada Road, Suraj Nagar, Bhopal, MP - 462044',
+          landAreaAcres: 6.2,
+          builtUpAreaSqMtr: 14200,
+        },
+        courses:
+          application.courses && application.courses.length > 0
+            ? application.courses
+            : [
+                { courseName: 'B.Tech', branch: 'Computer Science & Engineering', level: 'UG', proposedIntake: 180, approvedIntake: 120 },
+                { courseName: 'B.Tech', branch: 'Artificial Intelligence & Data Science', level: 'UG', proposedIntake: 60, approvedIntake: 60 },
+                { courseName: 'B.Tech', branch: 'Electronics & Communication', level: 'UG', proposedIntake: 60, approvedIntake: 60 },
+              ],
+        qrCodeDataUrl: application.qrCodeDataUrl || '',
+      });
+    }
+  }, [application]);
+
+  useEffect(() => {
+    if (isApproved) {
+      confetti({
+        particleCount: 70,
+        spread: 60,
+        origin: { y: 0.6 },
+        colors: ['#ea580c', '#0c2340', '#059669', '#d97706'],
+      });
+    }
+  }, [isApproved]);
+
+  const handleApprove = async () => {
+    try {
+      setApproving(true);
+      const res = await scrutinyAPI.directApprove(app.applicationId, {
+        approvalRemarks: 'Final Statutory Approval granted post-EVC review by AICTE Council Chairman & Member Secretary.',
+      });
+      if (res.data?.success) {
+        setApp((prev) => ({
+          ...prev,
+          status: 'Approved',
+          stage: 'Final Decision',
+        }));
+        confetti({
+          particleCount: 130,
+          spread: 85,
+          origin: { y: 0.5 },
+          colors: ['#059669', '#10b981', '#34d399', '#ea580c', '#0c2340'],
+        });
+        showToast(
+          `🎉 Statutory Approval Granted! Letter of Approval (LoA) for ${app.institutionName} officially sealed.`,
+          'success'
+        );
+        triggerRefresh();
+      }
+    } catch (err) {
+      showToast(err.response?.data?.message || err.message || 'Approval grant failed', 'error');
+    } finally {
+      setApproving(false);
+    }
   };
 
   const handlePrint = () => {
@@ -53,12 +139,45 @@ export const ApprovalDocketModal = ({ application, onClose }) => {
         {/* Top Control Bar */}
         <div className="sticky top-0 z-20 bg-gradient-to-r from-rose-950 via-rose-900 to-[#0c2340] text-white px-4 sm:px-6 py-3.5 flex items-center justify-between no-print border-b border-rose-950/30">
           <div className="flex items-center gap-2 text-xs font-semibold">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="font-bold tracking-wide truncate max-w-[200px] sm:max-w-none">
-              AICTE Letter of Approval Docket
+            <span
+              className={`w-2.5 h-2.5 rounded-full ${
+                isApproved ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'
+              }`}
+            />
+            <span className="font-bold tracking-wide truncate max-w-[170px] sm:max-w-none">
+              {isApproved ? 'AICTE Letter of Approval (LoA) Docket' : 'LoA Draft Preview — Council Desk'}
+            </span>
+            <span
+              className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full ${
+                isApproved
+                  ? 'bg-emerald-500/30 text-emerald-200 border border-emerald-400/30'
+                  : 'bg-amber-500/30 text-amber-200 border border-amber-400/30'
+              }`}
+            >
+              {isApproved ? 'Official & Sealed' : 'Draft Preview'}
             </span>
           </div>
+
           <div className="flex items-center gap-2">
+            {canApprove && (
+              <button
+                onClick={handleApprove}
+                disabled={approving}
+                className="flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white text-xs font-bold rounded-xl shadow transition cursor-pointer"
+              >
+                {approving ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Sealing...</span>
+                  </>
+                ) : (
+                  <>
+                    <Award className="w-3.5 h-3.5" />
+                    <span>Approve & Seal</span>
+                  </>
+                )}
+              </button>
+            )}
             <button
               onClick={handlePrint}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-xl shadow transition cursor-pointer"
@@ -77,8 +196,55 @@ export const ApprovalDocketModal = ({ application, onClose }) => {
           </div>
         </div>
 
+        {/* Actionable Preview Alert Banner for Admin/HQ */}
+        {canApprove && (
+          <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-b border-amber-200 px-4 sm:px-6 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 no-print">
+            <div className="flex items-start gap-2.5">
+              <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-xs font-bold text-amber-900">
+                  Review Letter of Approval Before Sealing
+                </p>
+                <p className="text-[11px] text-amber-800">
+                  Carefully scrutinize institutional details, approved seat matrix, and EVC statutory clearance. Once verified, apply the statutory seal.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={handleApprove}
+              disabled={approving}
+              className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold rounded-xl shadow-md transition cursor-pointer shrink-0"
+            >
+              {approving ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Applying Council Seal...</span>
+                </>
+              ) : (
+                <>
+                  <Award className="w-4 h-4" />
+                  <span>Approve & Seal LoA</span>
+                </>
+              )}
+            </button>
+          </div>
+        )}
+
         {/* Printable Official AICTE Docket Document */}
-        <div id="printable-docket" className="p-8 bg-white text-slate-800 font-sans print:p-0">
+        <div id="printable-docket" className="p-6 sm:p-8 bg-white text-slate-800 font-sans print:p-0">
+          {/* Draft vs Official Status Strip */}
+          {isApproved ? (
+            <div className="bg-emerald-50 border border-emerald-200 p-2 rounded-lg text-emerald-800 text-xs text-center font-bold tracking-wide uppercase mb-4 flex items-center justify-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+              <span>Statutory Approval Granted — Official Council Clearance Docket Sealed</span>
+            </div>
+          ) : (
+            <div className="bg-amber-100/70 border border-amber-300 p-2 rounded-lg text-amber-900 text-xs text-center font-bold tracking-wide uppercase mb-4 flex items-center justify-center gap-2">
+              <Clock className="w-4 h-4 text-amber-600" />
+              <span>LoA Draft Preview — Awaiting Final Statutory Council Seal</span>
+            </div>
+          )}
+
           {/* Council Official Letterhead */}
           <div className="border-b-2 border-[#0c2340] pb-4 mb-6 text-center">
             <div className="flex items-center justify-center gap-4 mb-2">
@@ -171,23 +337,77 @@ export const ApprovalDocketModal = ({ application, onClose }) => {
                 <div>
                   <div className="flex items-center gap-1 text-xs font-bold text-emerald-700">
                     <CheckCircle2 className="w-4 h-4" />
-                    <span>Cryptographically Validated</span>
+                    <span>{isApproved ? 'Cryptographically Validated' : 'Validation Seed Generated'}</span>
                   </div>
-                  <p className="text-xs text-slate-500 font-mono mt-0.5">
-                    Scan with any smartphone or AICTE Pravah scanner to verify docket authenticity.
+                  <p className="text-xs text-slate-500 font-mono mt-0.5 max-w-xs">
+                    {isApproved
+                      ? 'Scan with any smartphone or AICTE Pravah scanner to verify docket authenticity.'
+                      : 'Digital verification hash will be sealed and committed to ledger upon approval.'}
                   </p>
                 </div>
               </div>
 
               {/* Council Signature */}
               <div className="text-right">
-                <div className="w-32 h-10 mx-auto flex items-center justify-center font-serif text-slate-400 italic text-sm border-b border-slate-400 mb-1">
-                  Dr. Abhay Jere
-                </div>
-                <p className="text-xs font-bold text-[#0c2340]">Member Secretary</p>
-                <p className="text-xs text-slate-500">All India Council for Technical Education</p>
+                {isApproved ? (
+                  <>
+                    <div className="w-36 h-10 mx-auto flex items-center justify-center font-serif text-[#0c2340] italic text-base border-b border-slate-400 mb-1">
+                      Dr. Abhay Jere
+                    </div>
+                    <p className="text-xs font-bold text-[#0c2340]">Member Secretary</p>
+                    <p className="text-[11px] text-slate-500">All India Council for Technical Education</p>
+                    <p className="text-[10px] text-emerald-700 font-mono mt-0.5">Digitally Signed & Sealed</p>
+                  </>
+                ) : (
+                  <>
+                    <div className="w-36 h-10 mx-auto flex items-center justify-center font-mono text-amber-600 text-xs border-b border-dashed border-amber-400 mb-1">
+                      [Pending Digital Seal]
+                    </div>
+                    <p className="text-xs font-bold text-slate-500">Member Secretary</p>
+                    <p className="text-[11px] text-slate-400">All India Council for Technical Education</p>
+                  </>
+                )}
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Bottom Action Footer */}
+        <div className="p-4 sm:px-6 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 no-print">
+          <div className="flex items-center gap-2 text-xs text-slate-600">
+            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span>
+              {isApproved
+                ? 'Docket officially validated and archived in Central AICTE Repository.'
+                : 'Statutory approval will seal this Letter of Approval and dispatch notifications.'}
+            </span>
+          </div>
+          <div className="flex items-center gap-2.5 w-full sm:w-auto">
+            <button
+              onClick={onClose}
+              className="flex-1 sm:flex-initial px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-xl transition cursor-pointer text-center"
+            >
+              {isApproved ? 'Close Docket' : 'Close Preview'}
+            </button>
+            {canApprove && (
+              <button
+                onClick={handleApprove}
+                disabled={approving}
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-xs font-bold rounded-xl shadow-md transition cursor-pointer"
+              >
+                {approving ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Applying Council Seal...</span>
+                  </>
+                ) : (
+                  <>
+                    <Award className="w-4 h-4" />
+                    <span>Approve & Seal LoA</span>
+                  </>
+                )}
+              </button>
+            )}
           </div>
         </div>
       </div>
