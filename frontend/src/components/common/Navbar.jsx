@@ -90,47 +90,42 @@ export const Navbar = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/70 shadow-xs transition">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition">
       {/* 1. Indian National Tricolor Hairline Accent */}
       <div className="h-[2px] w-full bg-gradient-to-r from-[#f97316] via-white to-[#16a34a]" />
 
       <div className="w-full px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-17">
+        <div className="relative flex items-center justify-between h-20">
           
-          {/* Left: Modern SaaS Council Brand & Seal */}
+          {/* Left: Modern Council Brand & Seal (Bigger & Clean, no 26262) */}
           <div
             onClick={() => navigateTo('dashboard')}
-            className="flex items-center gap-3 cursor-pointer group"
+            className="flex items-center gap-3.5 cursor-pointer group shrink-0"
           >
-            <div className="w-9 h-9 rounded-xl bg-slate-900 border border-slate-700/60 flex items-center justify-center text-white shadow-xs group-hover:bg-slate-800 transition shrink-0">
-              <span className="font-bold text-base text-orange-400 font-sans">प्र</span>
+            <div className="w-11 h-11 rounded-2xl bg-slate-900 border border-slate-700/60 flex items-center justify-center text-white shadow-sm group-hover:bg-slate-800 transition shrink-0">
+              <span className="font-bold text-xl text-orange-400 font-sans">प्र</span>
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <span className="text-[17px] font-bold tracking-tight text-slate-900 font-sans">
-                  AICTE Pravah
-                </span>
-                <span className="hidden sm:inline-block text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200/70">
-                  SIH 26262
-                </span>
-              </div>
-              <p className="text-xs text-slate-400 font-normal hidden md:block leading-none mt-0.5">
-                अखिल भारतीय तकनीकी शिक्षा परिषद • Statutory Approval Desk
+              <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 font-sans leading-none block">
+                AICTE Pravah
+              </span>
+              <p className="text-xs text-slate-500 font-medium hidden md:block leading-tight mt-1">
+                अखिल भारतीय तकनीकी शिक्षा परिषद • Statutory Approval Portal
               </p>
             </div>
           </div>
 
-          {/* Center: Sleek Segmented Pill Navigation Tabs */}
-          <nav className="hidden md:flex items-center bg-slate-100/80 p-1 rounded-xl border border-slate-200/60 shadow-2xs gap-0.5">
+          {/* Center: Absolute Centered Main Navigation Buttons (Bigger, Highly Readable) */}
+          <nav className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/80 shadow-2xs gap-1.5">
             <button
               onClick={() => navigateTo('dashboard')}
-              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs sm:text-[13px] transition cursor-pointer ${
+              className={`flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm transition cursor-pointer ${
                 currentView === 'dashboard'
-                  ? 'bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/50'
-                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-200/40 font-medium'
+                  ? 'bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/60'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 font-medium'
               }`}
             >
-              <LayoutDashboard className="w-3.5 h-3.5 text-blue-600" />
+              <LayoutDashboard className="w-4 h-4 text-blue-600" />
               <span>
                 {activeRole === 'college'
                   ? 'My Applications'
@@ -144,32 +139,32 @@ export const Navbar = () => {
 
             <button
               onClick={() => navigateTo('radar')}
-              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs sm:text-[13px] transition relative cursor-pointer ${
+              className={`flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm transition relative cursor-pointer ${
                 currentView === 'radar'
-                  ? 'bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/50'
-                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-200/40 font-medium'
+                  ? 'bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/60'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 font-medium'
               }`}
             >
-              <Radar className="w-3.5 h-3.5 text-orange-600" />
+              <Radar className="w-4 h-4 text-orange-600" />
               <span>Validity Watchdog</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse ml-0.5" />
+              <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse ml-0.5" />
             </button>
 
             <button
               onClick={() => navigateTo('audit')}
-              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs sm:text-[13px] transition cursor-pointer ${
+              className={`flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm transition cursor-pointer ${
                 currentView === 'audit'
-                  ? 'bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/50'
-                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-200/40 font-medium'
+                  ? 'bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/60'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 font-medium'
               }`}
             >
-              <History className="w-3.5 h-3.5 text-slate-500" />
+              <History className="w-4 h-4 text-slate-600" />
               <span>Audit Logs</span>
             </button>
           </nav>
 
-          {/* Right Controls: Fast Demo Breach + User Profile Display + Exit */}
-          <div className="flex items-center gap-2.5 sm:gap-3">
+          {/* Right Controls: User Profile & Actions */}
+          <div className="flex items-center gap-3 shrink-0">
             
             {/* Demo SLA Breach Simulation (Only for HQ & RO desks) */}
             {(activeRole === 'hq' || activeRole === 'ro') && (
