@@ -94,38 +94,38 @@ export const Navbar = () => {
       {/* 1. Indian National Tricolor Hairline Accent */}
       <div className="h-[2px] w-full bg-gradient-to-r from-[#f97316] via-white to-[#16a34a]" />
 
-      <div className="w-full px-4 sm:px-6 lg:px-8">
-        <div className="relative flex items-center justify-between h-20">
+      <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 sm:h-20 gap-2 sm:gap-4">
           
-          {/* Left: Modern Council Brand & Seal (Bigger & Clean, no 26262) */}
+          {/* Left: Modern Council Brand & Seal */}
           <div
             onClick={() => navigateTo('dashboard')}
-            className="flex items-center gap-3.5 cursor-pointer group shrink-0"
+            className="flex items-center gap-2.5 sm:gap-3.5 cursor-pointer group shrink-0"
           >
-            <div className="w-11 h-11 rounded-2xl bg-slate-900 border border-slate-700/60 flex items-center justify-center text-white shadow-sm group-hover:bg-slate-800 transition shrink-0">
-              <span className="font-bold text-xl text-orange-400 font-sans">प्र</span>
+            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-slate-900 border border-slate-700/60 flex items-center justify-center text-white shadow-sm group-hover:bg-slate-800 transition shrink-0">
+              <span className="font-bold text-lg sm:text-xl text-orange-400 font-sans">प्र</span>
             </div>
             <div>
-              <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 font-sans leading-none block">
+              <span className="text-lg sm:text-2xl font-bold tracking-tight text-slate-900 font-sans leading-none block">
                 AICTE Pravah
               </span>
-              <p className="text-xs text-slate-500 font-medium hidden md:block leading-tight mt-1">
+              <p className="text-[11px] sm:text-xs text-slate-500 font-medium hidden lg:block leading-tight mt-1">
                 अखिल भारतीय तकनीकी शिक्षा परिषद • Statutory Approval Portal
               </p>
             </div>
           </div>
 
-          {/* Center: Absolute Centered Main Navigation Buttons (Bigger, Highly Readable) */}
-          <nav className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/80 shadow-2xs gap-1.5">
+          {/* Center: Desktop Navigation Tabs (Visible on lg+ screens: 1024px, 1280px, 1440px, 1920px) */}
+          <nav className="hidden lg:flex items-center bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/80 shadow-2xs gap-1">
             <button
               onClick={() => navigateTo('dashboard')}
-              className={`flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm transition cursor-pointer ${
+              className={`flex items-center gap-2 px-3.5 py-1.5 xl:px-4 xl:py-2 rounded-xl text-xs xl:text-sm transition cursor-pointer ${
                 currentView === 'dashboard'
                   ? 'bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/60'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 font-medium'
               }`}
             >
-              <LayoutDashboard className="w-4 h-4 text-blue-600" />
+              <LayoutDashboard className="w-3.5 h-3.5 xl:w-4 xl:h-4 text-blue-600" />
               <span>
                 {activeRole === 'college'
                   ? 'My Applications'
@@ -139,26 +139,26 @@ export const Navbar = () => {
 
             <button
               onClick={() => navigateTo('radar')}
-              className={`flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm transition relative cursor-pointer ${
+              className={`flex items-center gap-2 px-3.5 py-1.5 xl:px-4 xl:py-2 rounded-xl text-xs xl:text-sm transition relative cursor-pointer ${
                 currentView === 'radar'
                   ? 'bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/60'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 font-medium'
               }`}
             >
-              <Radar className="w-4 h-4 text-orange-600" />
+              <Radar className="w-3.5 h-3.5 xl:w-4 xl:h-4 text-orange-600" />
               <span>Validity Watchdog</span>
               <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse ml-0.5" />
             </button>
 
             <button
               onClick={() => navigateTo('audit')}
-              className={`flex items-center gap-2.5 px-4 py-2 rounded-xl text-sm transition cursor-pointer ${
+              className={`flex items-center gap-2 px-3.5 py-1.5 xl:px-4 xl:py-2 rounded-xl text-xs xl:text-sm transition cursor-pointer ${
                 currentView === 'audit'
                   ? 'bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/60'
                   : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 font-medium'
               }`}
             >
-              <History className="w-4 h-4 text-slate-600" />
+              <History className="w-3.5 h-3.5 xl:w-4 xl:h-4 text-slate-600" />
               <span>Audit Logs</span>
             </button>
           </nav>
@@ -207,51 +207,51 @@ export const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Navigation Tabs Bar (Visible on mobile screens < md) */}
-        <div className="flex md:hidden items-center justify-around bg-slate-100/90 p-1 rounded-xl border border-slate-200/70 mb-2 gap-1">
+        {/* Tablet / Mobile Navigation Tabs Bar (Visible on screens < lg, i.e., 13-inch small laptops, tablets, mobile) */}
+        <div className="flex lg:hidden items-center justify-around bg-slate-100/90 p-1.5 rounded-xl border border-slate-200/70 mb-2.5 gap-1 shadow-2xs">
           <button
             onClick={() => navigateTo('dashboard')}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs transition cursor-pointer ${
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs transition cursor-pointer ${
               currentView === 'dashboard'
                 ? 'bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/60'
                 : 'text-slate-600 hover:text-slate-900 font-medium'
             }`}
           >
-            <LayoutDashboard className="w-3.5 h-3.5 text-blue-600" />
+            <LayoutDashboard className="w-3.5 h-3.5 text-blue-600 shrink-0" />
             <span className="truncate">
               {activeRole === 'college'
-                ? 'Applications'
+                ? 'My Applications'
                 : activeRole === 'ro'
-                ? 'Scrutiny'
+                ? 'Scrutiny Desk'
                 : activeRole === 'evc'
-                ? 'Visits'
-                : 'Console'}
+                ? 'Campus Visits'
+                : 'Approval Console'}
             </span>
           </button>
 
           <button
             onClick={() => navigateTo('radar')}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs transition relative cursor-pointer ${
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs transition relative cursor-pointer ${
               currentView === 'radar'
                 ? 'bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/60'
                 : 'text-slate-600 hover:text-slate-900 font-medium'
             }`}
           >
-            <Radar className="w-3.5 h-3.5 text-orange-600" />
-            <span>Watchdog</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+            <Radar className="w-3.5 h-3.5 text-orange-600 shrink-0" />
+            <span className="truncate">Validity Watchdog</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse ml-0.5" />
           </button>
 
           <button
             onClick={() => navigateTo('audit')}
-            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs transition cursor-pointer ${
+            className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs transition cursor-pointer ${
               currentView === 'audit'
                 ? 'bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/60'
                 : 'text-slate-600 hover:text-slate-900 font-medium'
             }`}
           >
-            <History className="w-3.5 h-3.5 text-slate-600" />
-            <span>Audit</span>
+            <History className="w-3.5 h-3.5 text-slate-600 shrink-0" />
+            <span className="truncate">Audit Logs</span>
           </button>
         </div>
       </div>
