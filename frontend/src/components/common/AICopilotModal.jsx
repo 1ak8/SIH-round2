@@ -118,29 +118,29 @@ export const AICopilotModal = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-40 flex items-center justify-center w-14 h-14 rounded-full bg-slate-900 text-white shadow-2xl hover:scale-105 active:scale-95 transition-all duration-200 border-2 border-slate-700/80 group"
+          className="fixed bottom-8 right-8 z-40 flex items-center justify-center w-16 h-16 rounded-full bg-slate-900 text-white shadow-2xl hover:scale-105 active:scale-95 transition-all duration-200 border-2 border-slate-700/80 group"
           title="Open AICTE Pravah Sahayak"
           aria-label="Open AICTE Pravah Sahayak"
         >
           {/* Pulsing ring indicator */}
-          <span className="absolute -inset-0.5 rounded-full bg-blue-500/30 group-hover:bg-blue-500/50 blur-sm -z-10 transition duration-300" />
+          <span className="absolute -inset-1 rounded-full bg-blue-500/30 group-hover:bg-blue-500/50 blur-sm -z-10 transition duration-300 animate-pulse" />
           
           <div className="relative flex items-center justify-center">
             {/* Round Modern Chat Icon with Bot Spark */}
             <div className="relative">
-              <MessageSquare className="w-6 h-6 text-white transition-transform group-hover:scale-110" />
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400 absolute -top-1.5 -right-2 animate-bounce" />
+              <MessageSquare className="w-7 h-7 text-white transition-transform group-hover:scale-110" />
+              <Sparkles className="w-4 h-4 text-cyan-400 absolute -top-2 -right-2 animate-bounce" />
             </div>
 
             {/* Active Online Status Badge */}
-            <span className="absolute -bottom-1 -right-1 flex h-3 w-3">
+            <span className="absolute -bottom-1.5 -right-1.5 flex h-3.5 w-3.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 border-2 border-slate-900" />
+              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-slate-900" />
             </span>
           </div>
 
           {/* Hover Tooltip Pill */}
-          <span className="absolute right-16 px-3 py-1.5 bg-slate-900 text-white text-xs font-semibold rounded-lg shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-slate-700">
+          <span className="absolute right-20 px-3 py-1.5 bg-slate-900 text-white text-xs font-semibold rounded-lg shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-slate-700">
             AI Pravah Sahayak • APH Copilot
           </span>
         </button>
