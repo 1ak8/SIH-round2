@@ -94,7 +94,7 @@ export const Navbar = () => {
       {/* 1. Indian National Tricolor Hairline Accent */}
       <div className="h-[2px] w-full bg-gradient-to-r from-[#f97316] via-white to-[#16a34a]" />
 
-      <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20 gap-2 sm:gap-4">
           
           {/* Left: Modern Council Brand & Seal */}

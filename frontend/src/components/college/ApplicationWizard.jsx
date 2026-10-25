@@ -12,6 +12,7 @@ import {
   Upload,
   AlertTriangle,
   Send,
+  X,
 } from 'lucide-react';
 import { applicationAPI } from '../../services/api';
 import { useApp } from '../../context/AppContext';
