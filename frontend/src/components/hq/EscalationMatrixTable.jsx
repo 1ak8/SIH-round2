@@ -68,26 +68,26 @@ export const EscalationMatrixTable = ({ breachedApplications = [], onReassigned 
       <div className="bg-gradient-to-r from-rose-950 via-rose-900 to-[#0c2340] text-white p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-white shrink-0">
-            <ShieldAlert className="w-5 h-5 text-rose-300 animate-pulse" />
+            <ShieldAlert className="w-5 h-5 text-white animate-pulse" />
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="font-bold text-sm sm:text-base tracking-tight font-sans">
+              <h3 className="font-bold text-base sm:text-lg tracking-tight font-sans text-white">
                 Central AICTE SLA Escalation Matrix
               </h3>
-              <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-rose-500/80 text-white">
+              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-rose-600 text-white border border-rose-400/40">
                 {breachedApplications.length} Breaches Active
               </span>
             </div>
-            <p className="text-xs text-rose-200/90 mt-0.5 leading-snug">
+            <p className="text-xs text-white/95 font-medium mt-0.5 leading-snug">
               Level 1 (Regional Director) & Level 2 (Member Secretary HQ) Intervention Desk
             </p>
           </div>
         </div>
 
-        <div className="text-left sm:text-right text-[11px] sm:text-xs">
-          <span className="text-rose-200">Enforcement Authority:</span>{' '}
-          <strong className="text-white block sm:inline">AICTE HQ, New Delhi</strong>
+        <div className="text-left sm:text-right text-xs">
+          <span className="text-white/80">Enforcement Authority:</span>{' '}
+          <strong className="text-white font-bold block sm:inline">AICTE HQ, New Delhi</strong>
         </div>
       </div>
 
