@@ -21,7 +21,8 @@ import aiRoutes from './routes/aiRoutes.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load root .env
+// Load .env (supports both root .env and backend/.env)
+dotenv.config();
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const app = express();
