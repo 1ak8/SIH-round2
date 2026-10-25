@@ -1,0 +1,287 @@
+================================================================================
+           AICTE PRAVAH - SMART WORKFLOW AUTOMATION & COMPLIANCE SYSTEM
+                    Problem Statement ID: 26262 (SIH Round 2)
+================================================================================
+
+1. PROBLEM STATEMENT OVERVIEW & SUMMARY EXPLANATION
+--------------------------------------------------------------------------------
+- Problem Statement ID: 26262
+- Title: Integrated AICTE Approval Workflow Automation, Compliance Monitoring 
+         and Alert Management System
+- Ministry / Organization: All India Council for Technical Education (AICTE)
+
+Background & Ground Reality:
+AICTE receives thousands of applications every academic cycle from technical 
+institutions across India for new approvals, extensions (EoA), intake increases, 
+and course additions. The statutory process moves through sequential stages:
+Scrutiny / Re-scrutiny -> Expert Visit Committee (EVC) -> Standing Appellate/
+Hearing Committees (SAC/SHC) as governed by the Approval Process Handbook (APH).
+
+Current Challenges:
+1. Stage-wise Pendency & Bottlenecks: Files sit on officers' desks for weeks 
+   without real-time tracking, transparency, or accountability.
+2. Unmonitored Undertakings: Approvals often granted conditionally (e.g., build 
+   infrastructure or hire faculty within 90 days) are forgotten due to a lack of 
+   automated follow-up mechanisms.
+3. Expired Critical Documents: Land lease deeds, Fire NOCs, and Structural 
+   Stability certificates expire unnoticed, creating legal and safety liabilities.
+4. Absence of Automated Escalation: When deadlines are breached by officers or 
+   colleges, higher authorities (Bureau Directors, Member Secretary) remain unaware.
+
+Solution & Expected Outcome:
+AICTE Pravah provides a single, unified digital platform that automates approval 
+routing, provides real-time role-based dashboards, enforces stage-wise SLAs with 
+auto-escalation, proactively tracks document and lease validity, and validates 
+field inspections with tamper-proof digital evidence.
+
+
+2. TECHNOLOGY STACK
+--------------------------------------------------------------------------------
+- Frontend: React.js (Vite) + Tailwind CSS + Lucide React Icons + Recharts
+- Backend: Node.js + Express.js (Modular REST API Architecture)
+- Database: MongoDB + Mongoose ODM (Document DB for applications & compliance logs)
+- Media & Storage: Cloudinary API (Campus infrastructure photos, geo-tagged 
+                   inspection proofs, PDF certificates)
+- Environment Setup: Single root-level .env configuration shared across backend 
+                     and frontend
+
+
+3. LOCKED WORKSPACE STRUCTURE
+--------------------------------------------------------------------------------
+SIH round2/
+│
+├── .env                                  <-- [SINGLE ROOT ENV] Shared by Backend & Frontend
+├── .gitignore                            <-- Git ignore (node_modules, dist, logs)
+├── project-plan.txt                      <-- Master Blueprint & Specification Document
+│
+├── backend/                              <-- [NODE.JS + EXPRESS BACKEND ENGINE]
+│   ├── package.json
+│   ├── server.js                         <-- Express entrypoint, CORS, route mounting, DB init
+│   │
+│   ├── config/
+│   │   ├── db.js                         <-- MongoDB Atlas connection + standalone fallback
+│   │   └── cloudinary.js                 <-- Cloudinary setup & stream upload handler
+│   │
+│   ├── models/
+│   │   ├── User.js                       <-- 4 Roles: College, RO, EVC, HQ Super-Admin
+│   │   ├── Application.js                <-- Workflow state-machine, stage, SLA countdown & deficiencies
+│   │   ├── DocumentRecord.js             <-- Land Lease, Fire NOC, Stability Certificate with expiry dates
+│   │   ├── EVCInspection.js              <-- Committee members, visit dates, geo-tagged photos, verdict
+│   │   ├── Undertaking.js                <-- Conditional approval tracking, deadlines & proof uploads
+│   │   └── AuditLog.js                   <-- Immutable activity log (Who, When, What action, IP)
+│   │
+│   ├── middleware/
+│   │   ├── authMiddleware.js             <-- JWT verify + RBAC + Quick Demo Role Switcher
+│   │   ├── uploadMiddleware.js           <-- Multer memory storage for Cloudinary streaming
+│   │   └── errorHandler.js               <-- Centralized error & validation handling
+│   │
+│   ├── controllers/
+│   │   ├── authController.js             <-- Login, user profile, demo token generation
+│   │   ├── applicationController.js      <-- Apply, list, get by ID, stage progression
+│   │   ├── scrutinyController.js         <-- RO review desk, raise deficiency, revert, approve to EVC
+│   │   ├── evcController.js              <-- Inspection scheduling, geo photo upload, submit report
+│   │   ├── complianceController.js       <-- Undertakings tracking, lease/NOC validity radar alerts
+│   │   └── adminController.js            <-- HQ Pan-India stats, regional heatmap, auto-escalation
+│   │
+│   ├── routes/
+│   │   ├── authRoutes.js                 <-- /api/auth
+│   │   ├── applicationRoutes.js          <-- /api/applications
+│   │   ├── scrutinyRoutes.js             <-- /api/scrutiny (Includes Faculty Radar)
+│   │   ├── evcRoutes.js                  <-- /api/evc
+│   │   ├── complianceRoutes.js           <-- /api/compliance
+│   │   ├── adminRoutes.js                <-- /api/admin
+│   │   └── aiRoutes.js                   <-- /api/ai (Google Gemini APH Copilot)
+│   │
+│   └── utils/
+│       ├── slaEngine.js                  <-- SLA timer calculator & auto-escalation level trigger
+│       ├── expiryWatchdog.js             <-- Calculates document expiry (>60d Green, <30d Amber, Red Expired)
+│       └── seedData.js                   <-- Realistic colleges, files & inspector seed records
+│
+└── frontend/                             <-- [REACT + VITE + TAILWIND FRONTEND UI]
+    ├── index.html
+    ├── package.json
+    ├── vite.config.js                    <-- Configured with envDir: '../' (Reads root .env)
+    ├── tailwind.config.js                <-- AICTE Navy, Saffron, Emerald & Warning color palette
+    ├── postcss.config.js
+    │
+    └── src/
+        ├── main.jsx                      <-- React root DOM renderer
+        ├── App.jsx                       <-- Main routing & App shell
+        ├── index.css                     <-- Tailwind imports + Glassmorphism & Animations
+        │
+        ├── services/
+        │   └── api.js                    <-- Axios instance with auto-injected demo role headers
+        │
+        ├── context/
+        │   ├── AuthContext.jsx           <-- Active User state & 1-Click Role Switcher logic
+        │   └── AppContext.jsx            <-- Global notifications, active file, live refresh trigger
+        │
+        ├── components/
+        │   ├── common/
+        │   │   ├── Navbar.jsx            <-- Top bar with AICTE emblem, Role Switcher dropdown, alerts
+        │   │   ├── Sidebar.jsx           <-- Navigation menu adapted per active role
+        │   │   ├── StatusBadge.jsx       <-- Color-coded pills (Scrutiny, EVC, Approved, Reverted)
+        │   │   ├── SLATimerBadge.jsx     <-- Live countdown badge (Green on-time / Red overdue)
+        │   │   ├── MetricCard.jsx        <-- Stat card with counter, icon, and progress bar
+        │   │   ├── AuditTrailTimeline.jsx<-- Visual vertical audit timeline of all past actions
+        │   │   ├── GhostFacultyRadar.jsx <-- [STAR DIFFERENTIATOR 1] Cross-college PAN & Ghost Faculty Radar
+        │   │   └── AICopilotModal.jsx    <-- [STAR DIFFERENTIATOR 2] Autonomous Gemini APH Compliance Bot
+        │   │
+        │   ├── college/                  <-- PANEL 1: COLLEGE
+        │   │   ├── CollegeDashboard.jsx  <-- Summary cards, active applications, urgent notices
+        │   │   ├── ApplicationWizard.jsx <-- Multi-step application form + Cloudinary uploads
+        │   │   ├── WorkflowStepper.jsx   <-- Swiggy-like live stage movement tracker
+        │   │   ├── DeficiencyBox.jsx     <-- RO deficiency response & document re-upload
+        │   │   ├── DocumentRadarCard.jsx <-- Lease & Fire NOC validity countdown cards
+        │   │   └── UndertakingModal.jsx  <-- Upload proof for conditional approval promises
+        │   │
+        │   ├── ro/                       <-- PANEL 2: REGIONAL OFFICER
+        │   │   ├── RODashboard.jsx       <-- Regional inbox stats, pendency counter
+        │   │   ├── RegionalInboxTable.jsx<-- Sortable list with SLA urgency filtering
+        │   │   └── DigitalScrutinyDesk.jsx<-- Dual-pane screen: Left=Docs/Photos, Right=Checklist & Actions
+        │   │
+        │   ├── evc/                      <-- PANEL 3: EVC INSPECTION COMMITTEE
+        │   │   ├── EVCDashboard.jsx      <-- Allocated inspections calendar & status
+        │   │   ├── InspectionScheduleModal.jsx <-- Fix visit date & notify institute
+        │   │   └── InspectionReportDesk.jsx<-- On-site verification checklist + Geo-tagged photos upload
+        │   │
+        │   └── hq/                       <-- PANEL 4: CENTRAL AICTE HQ
+        │       ├── HQDashboard.jsx       <-- Pan-India KPIs, clearance rate, national overview
+        │       ├── RegionalHeatmapChart.jsx<-- Comparison bar/chart of ROs by delay & pendency
+        │       ├── EscalationMatrixTable.jsx<-- Star Feature: Breached SLAs with re-assign & notice actions
+        │       └── RulesConfigModal.jsx  <-- Dynamically adjust SLA days & warning windows
+        │
+        └── pages/
+            ├── DashboardPage.jsx         <-- Smart router that mounts the active role's dashboard
+            ├── ApplicationDetailPage.jsx <-- 360° deep dive view of any application
+            ├── DocumentsWatchdogPage.jsx <-- Dedicated National / College Lease & Document Expiry Radar
+            └── AuditLogsPage.jsx         <-- Searchable tamper-proof digital audit log
+
+
+4. PLAN & FEATURES
+--------------------------------------------------------------------------------
+
+[PANEL 1: COLLEGE / INSTITUTION PORTAL (Applicant)]
+- Multi-step Application Wizard: Form for college infrastructure, land area,
+  intake details, and direct Cloudinary document/photo uploads.
+- Live Pipeline Tracker: Visual stepper (Submitted -> Scrutiny -> EVC -> Approval)
+  with active stage indicators and real-time SLA countdown timers.
+- Deficiency & Query Desk: View scrutiny objections raised by RO, with instant
+  clarification notes and one-click document re-upload facility.
+- Undertaking & Compliance Hub: Track post-approval conditional promises with
+  countdown deadlines and compliance proof submission.
+- Document & Lease Radar: Color-coded validity cards (Valid, Expiring Soon, Expired)
+  for Land Lease Deeds, Fire NOC, and Affiliations.
+
+[PANEL 2: REGIONAL OFFICER (RO) / SCRUTINY DESK]
+- Regional Inbox: Queue categorized by processing stages (New, Under Scrutiny,
+  Deficient, EVC Ready) with SLA urgency indicators.
+- Side-by-Side Scrutiny Desk: Split view displaying college data/documents on left
+  and APH checklist on right, with actions: [Pass to EVC], [Revert], [Direct Approve].
+- Regional Pendency Radar: Real-time aging tracker showing days spent at desk with
+  pre-breach warnings before automatic HQ escalation.
+
+[PANEL 3: EVC (EXPERT VISIT COMMITTEE) PANEL]
+- Inspection Scheduler: View allocated inspection queues and confirm visit dates.
+- Digital Inspection Form: Comprehensive checklist covering labs, classrooms,
+  library resources, and safety infrastructure.
+- Geo-Tagged Photo Upload: Live campus evidence upload via Cloudinary with GPS
+  coordinate stamping to ensure physical presence.
+- Recommendation Desk: Submit final verdict (Recommended, Recommended with
+  Undertaking, or Not Recommended) with observations.
+
+[PANEL 4: CENTRAL AICTE HQ / APEX ADMIN PANEL]
+- Pan-India Executive Dashboard: High-level KPI cards for total applications,
+  clearance velocity, approval ratios, and regional breakdown.
+- Regional Bottleneck Heatmap: Comparative analytics across regional offices to
+  identify processing delays and backlogs.
+- Central SLA Escalation Matrix: Real-time table of all breached deadlines with
+  assigned officer accountability and Level 1 / Level 2 escalation status.
+- Configurable Rules Engine: Dynamically adjust Scrutiny SLA days (e.g. 7 days),
+  EVC duration, and document expiry warning windows without code updates.
+- Immutable Digital Audit Trail: Cryptographic, tamper-proof activity history
+  recording every event (Actor, Action, Timestamp, IP).
+
+
+5. DIFFERENTIATORS
+--------------------------------------------------------------------------------
+1. Simulate SLA Breach Button: Live demo trigger that advances application age
+   by 10 days to visually demonstrate immediate auto-escalation on HQ Dashboard.
+2. Cloudinary Media Pipeline: Fast, responsive handling and preview of high-res
+   campus infrastructure, inspection evidence, and certificates.
+3. Anti-Fraud Geofence Verifier: Matches EVC inspector photo GPS coordinates
+   with the registered college coordinates to eliminate fake physical audits.
+4. One-Click AICTE Docket & PDF Generator: Generates official government-style
+   summary dockets complete with verifiable QR codes upon stage clearance.
+5. Multi-Channel Alert Dispatcher: Simulates real-time WhatsApp, Email, and
+   In-App alerts for document expiry warnings and SLA breach notices.
+6. Pre-Submission Document Validator: Client-side intelligence checking for
+   blank expiry fields or expired certificates before submission to minimize
+   initial scrutiny rejections.
+7. Ghost Faculty & Cross-College PAN/Aadhaar Duplicity Radar (STAR DIFFERENTIATOR 1):
+   Cross-institutional registry scan across technical institutes nationwide.
+   Detects concurrent dual-tenure rented professors, calculates 1:20 SFR & Cadre
+   distribution, and supports 1-click statutory cadre deficiency dispatch.
+8. Autonomous AI Statutory Compliance Copilot "Pravah Sahayak" (STAR DIFFERENTIATOR 2):
+   Google Gemini AI-powered handbook knowledge assistant fine-tuned on AICTE
+   Approval Process Handbook (APH 2024-27). Answers complex regulatory norms,
+   cadre requirements, land norms in English/Hindi, with built-in offline failover.
+
+
+6. DATABASE SCHEMA MODELS
+--------------------------------------------------------------------------------
+- User: Authentication, roles (college, ro, evc, hq), region, institute name.
+- Application: Workflow state-machine, infrastructure data, campus photos, SLA
+  stage, days remaining, overdue status, escalation level, deficiencies array.
+- DocumentRecord: Document type, issue date, expiry date, validity status,
+  Cloudinary file URL, renewal submission status.
+- EVCInspection: Committee members, scheduled date, geo-tagged photos array,
+  inspection checklist, recommendation verdict, undertaking requirements.
+- Undertaking: Condition title, description, due date, compliance evidence URLs,
+  verification status, regulatory remarks.
+- AuditLog: Application ID, actor name, role, action taken, fromState, toState,
+  remarks, timestamp, IP address.
+
+
+7. TOP 5 FEATURES (FOR PPT & EVALUATION)
+--------------------------------------------------------------------------------
+1. Ghost Faculty & PAN Duplicity Radar
+   - Problem: Same faculty PAN/credentials submitted across multiple colleges concurrently
+     to artificially meet cadre requirements (Rented Faculty fraud).
+   - Our Solution: Nationwide cross-college PAN & masked Aadhaar registry scan; real-time
+     1:20 Student-Faculty Ratio (SFR) calculation; instant red conflict alert with 1-click
+     statutory deficiency notice dispatch (APH Clause 4.2.b).
+   - Key Benefit: Eliminates ghost and rented faculty cartels before approvals are granted.
+
+2. 200m Geofenced Physical Campus Inspection (EVC Guard)
+   - Problem: Committee members signing proxy or remote inspection reports without physical
+     campus presence.
+   - Our Solution: Real device GPS coordinates tracked via Haversine algorithm; inspection
+     form and evidence submission unlocked strictly within 200 meters of the campus center;
+     all photo evidence stamped with coordinates and timestamps.
+   - Key Benefit: Guarantees 100% authentic physical inspections on the ground; blocks fake audits.
+
+3. 7-Day Stage SLA Clock & Automated Escalation Matrix
+   - Problem: Files stalled for weeks/months on officers' desks without transparency or accountability.
+   - Our Solution: Strict 7-day stage countdown timer; automated Level 1 escalation to Regional
+     Director at Day 8; automated Level 2 emergency escalation to AICTE HQ Member Secretary at
+     Day 10 with 1-click re-assignment and formal statutory Show-Cause dispatch.
+   - Key Benefit: Eliminates bureaucratic red-tape and enforces direct officer accountability.
+
+4. Proactive Document & Lease Validity Watchdog
+   - Problem: Land Lease deeds (>30 years) or Fire Safety NOCs expiring years after initial approval,
+     creating serious legal and safety hazards.
+   - Our Solution: Continuous background monitoring of all critical certificate validity;
+     active color-coded radar (<60d notice); automated 3-channel alert dispatcher (WhatsApp, Email,
+     In-App) with direct renewal proof upload from the college portal.
+   - Key Benefit: Proactive compliance surveillance ensuring campus safety certificates never lapse unnoticed.
+
+5. Autonomous AI Statutory Copilot - "AICTE Pravah Sahayak"
+   - Problem: AICTE Approval Process Handbook (APH 2024-27) is a dense 200+ page legal manual,
+     forcing rural colleges to depend on external middlemen/brokers.
+   - Our Solution: Google Gemini AI assistant grounded strictly in APH 2024-27; supports conversational
+     English and Hindi for land norms, cadre ratios, and deficiency resolutions; includes built-in
+     offline fallback engine for zero-crash reliability.
+   - Key Benefit: Democratizes regulatory compliance for institutions, making the entire approval
+     process broker-free and transparent.
+================================================================================

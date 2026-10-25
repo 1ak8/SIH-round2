@@ -1,0 +1,12 @@
+{
+  "name": "aicte-pravah-root",
+  "version": "1.0.0",
+  "description": "AICTE Pravah - Smart Approval Workflow Automation & Compliance System (Problem Statement ID 26262)",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "seed": "cd backend && npm run seed",
+    "build": "cd frontend && npm run build"
+  }
+}

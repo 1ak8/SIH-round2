@@ -1,0 +1,1003 @@
+import bcrypt from 'bcryptjs';
+import QRCode from 'qrcode';
+import { memoryStore } from './memoryStore.js';
+import User from '../models/User.js';
+import Application from '../models/Application.js';
+import DocumentRecord from '../models/DocumentRecord.js';
+import EVCInspection from '../models/EVCInspection.js';
+import Undertaking from '../models/Undertaking.js';
+import AuditLog from '../models/AuditLog.js';
+import { getDBStatus } from '../config/db.js';
+
+export const getSeedData = async () => {
+  const hashedPassword = await bcrypt.hash('aicte123', 10);
+
+  // 1. Users
+  const users = [
+    {
+      name: 'Dr. Ramesh Chandra (Principal)',
+      email: 'college@gmail.com',
+      password: hashedPassword,
+      role: 'college',
+      institutionName: 'Apex Institute of Technology, Bhopal',
+      region: 'Central',
+      designation: 'Principal & Head of Institution',
+      phone: '+91-98260-11223',
+    },
+    {
+      name: 'Dr. A. K. Sharma',
+      email: 'ro@gmail.com',
+      password: hashedPassword,
+      role: 'ro',
+      institutionName: 'AICTE Western Regional Office, Mumbai',
+      region: 'Western',
+      designation: 'Regional Officer & Bureau Head',
+      phone: '+91-98190-44556',
+    },
+    {
+      name: 'Prof. S. N. Deshmukh',
+      email: 'evc@gmail.com',
+      password: hashedPassword,
+      role: 'evc',
+      institutionName: 'National Institute of Technology (AICTE Nominee)',
+      region: 'Central',
+      designation: 'Chairman, Expert Visit Committee',
+      phone: '+91-94250-77889',
+    },
+    {
+      name: 'Dr. Abhay Jere / Member Secretary',
+      email: 'admin@gmail.com',
+      password: hashedPassword,
+      role: 'hq',
+      institutionName: 'AICTE Headquarters, Nelson Mandela Marg, New Delhi',
+      region: 'Pan-India',
+      designation: 'Member Secretary & Chief Approving Authority',
+      phone: '+91-11-2958-1000',
+    },
+    // Aliases for council emails
+    {
+      name: 'Dr. Ramesh Chandra (Principal)',
+      email: 'college@aicte.gov.in',
+      password: hashedPassword,
+      role: 'college',
+      institutionName: 'Apex Institute of Technology, Bhopal',
+      region: 'Central',
+      designation: 'Principal & Head of Institution',
+      phone: '+91-98260-11223',
+    },
+    {
+      name: 'Dr. A. K. Sharma',
+      email: 'ro@aicte.gov.in',
+      password: hashedPassword,
+      role: 'ro',
+      institutionName: 'AICTE Western Regional Office, Mumbai',
+      region: 'Western',
+      designation: 'Regional Officer & Bureau Head',
+      phone: '+91-98190-44556',
+    },
+    {
+      name: 'Prof. S. N. Deshmukh',
+      email: 'evc@aicte.gov.in',
+      password: hashedPassword,
+      role: 'evc',
+      institutionName: 'National Institute of Technology (AICTE Nominee)',
+      region: 'Central',
+      designation: 'Chairman, Expert Visit Committee',
+      phone: '+91-94250-77889',
+    },
+    {
+      name: 'Dr. Abhay Jere / Member Secretary',
+      email: 'hq@aicte.gov.in',
+      password: hashedPassword,
+      role: 'hq',
+      institutionName: 'AICTE Headquarters, Nelson Mandela Marg, New Delhi',
+      region: 'Pan-India',
+      designation: 'Member Secretary & Chief Approving Authority',
+      phone: '+91-11-2958-1000',
+    },
+  ];
+
+  // Helper QR generator
+  const qrApex = await QRCode.toDataURL(
+    JSON.stringify({
+      appId: 'AICTE-2026-C-1042',
+      institution: 'Apex Institute of Technology, Bhopal',
+      status: 'Under Scrutiny',
+      aphClause: 'APH 2024-27 Norms Verified',
+      verifyUrl: 'https://aicte-india.org/verify/AICTE-2026-C-1042',
+    })
+  );
+
+  const qrBengal = await QRCode.toDataURL(
+    JSON.stringify({
+      appId: 'AICTE-2026-E-0519',
+      institution: 'Bengal College of Engineering & Research, Kolkata',
+      status: 'Approved',
+      validity: 'Academic Year 2026-27',
+      verifyUrl: 'https://aicte-india.org/verify/AICTE-2026-E-0519',
+    })
+  );
+
+  // 2. Applications
+  const applications = [
+    {
+      applicationId: 'AICTE-2026-C-1042',
+      institutionName: 'Apex Institute of Technology, Bhopal',
+      applicationType: 'Extension of Approval (EoA)',
+      academicYear: '2026-2027',
+      region: 'Central',
+      status: 'Under Scrutiny',
+      stage: 'Scrutiny',
+      infrastructureDetails: {
+        landAreaAcres: 6.2,
+        builtUpAreaSqMtr: 14200,
+        totalClassrooms: 36,
+        totalLabs: 22,
+        computerCount: 520,
+        internetBandwidthMbps: 1000,
+        latitude: 23.2599,
+        longitude: 77.4126,
+        address: 'Bhadbhada Road, Suraj Nagar, Bhopal, MP - 462044',
+      },
+      courses: [
+        {
+          courseName: 'B.Tech',
+          branch: 'Computer Science & Engineering',
+          level: 'UG',
+          proposedIntake: 180,
+          approvedIntake: 120,
+        },
+        {
+          courseName: 'B.Tech',
+          branch: 'Artificial Intelligence & Data Science',
+          level: 'UG',
+          proposedIntake: 60,
+          approvedIntake: 60,
+        },
+        {
+          courseName: 'B.Tech',
+          branch: 'Electronics & Communication',
+          level: 'UG',
+          proposedIntake: 60,
+          approvedIntake: 60,
+        },
+      ],
+      facultyRoster: [
+        {
+          facultyId: 'FAC-2026-1042-01',
+          name: 'Dr. Rameshwar Dayal Tiwari',
+          designation: 'Professor & HOD',
+          department: 'Computer Science & Engineering',
+          panNumber: 'ABCDE1234F',
+          aadhaarMasked: 'XXXX-XXXX-8921',
+          highestQualification: 'Ph.D (IIT Bombay)',
+          experienceYears: 18,
+          biometricVerified: true,
+        },
+        {
+          facultyId: 'FAC-2026-1042-02',
+          name: 'Dr. Sneha Verma',
+          designation: 'Associate Professor',
+          department: 'Computer Science & Engineering',
+          panNumber: 'BKLPV5541Q',
+          aadhaarMasked: 'XXXX-XXXX-1142',
+          highestQualification: 'Ph.D (MANIT Bhopal)',
+          experienceYears: 11,
+          biometricVerified: true,
+        },
+        {
+          facultyId: 'FAC-2026-1042-03',
+          name: 'Prof. Amit Kumar Jha',
+          designation: 'Assistant Professor',
+          department: 'Artificial Intelligence & Data Science',
+          panNumber: 'JHAAM9023K',
+          aadhaarMasked: 'XXXX-XXXX-5510',
+          highestQualification: 'M.Tech (BITS Pilani)',
+          experienceYears: 5,
+          biometricVerified: false,
+        },
+        {
+          facultyId: 'FAC-2026-1042-04',
+          name: 'Dr. Priya Nair',
+          designation: 'Professor',
+          department: 'Applied Mathematics & Computing',
+          panNumber: 'NAIRP8812D',
+          aadhaarMasked: 'XXXX-XXXX-3390',
+          highestQualification: 'Ph.D (IISc Bangalore)',
+          experienceYears: 15,
+          biometricVerified: true,
+        },
+        {
+          facultyId: 'FAC-2026-1042-05',
+          name: 'Prof. Vikas Agrawal',
+          designation: 'Assistant Professor',
+          department: 'Computer Science & Engineering',
+          panNumber: 'AGRVV7761B',
+          aadhaarMasked: 'XXXX-XXXX-7721',
+          highestQualification: 'M.Tech (SGSITS Indore)',
+          experienceYears: 6,
+          biometricVerified: true,
+        },
+        {
+          facultyId: 'FAC-2026-1042-06',
+          name: 'Dr. Sunita Deshmukh',
+          designation: 'Associate Professor',
+          department: 'Electronics & Communication',
+          panNumber: 'DESHS4491M',
+          aadhaarMasked: 'XXXX-XXXX-4412',
+          highestQualification: 'Ph.D (VNIT Nagpur)',
+          experienceYears: 12,
+          biometricVerified: true,
+        },
+        {
+          facultyId: 'FAC-2026-1042-07',
+          name: 'Prof. Rajesh Meena',
+          designation: 'Assistant Professor',
+          department: 'Computer Science & Engineering',
+          panNumber: 'MEENR1124L',
+          aadhaarMasked: 'XXXX-XXXX-8824',
+          highestQualification: 'M.Tech (NIT Bhopal)',
+          experienceYears: 4,
+          biometricVerified: true,
+        },
+      ],
+      campusPhotos: [
+        {
+          url: 'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1000&q=80',
+          caption: 'Central Academic Block & Administrative Wing',
+          timestamp: new Date(Date.now() - 4 * 86400000),
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1000&q=80',
+          caption: 'High Performance Computing & Cloud Computing Laboratory',
+          timestamp: new Date(Date.now() - 4 * 86400000),
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=1000&q=80',
+          caption: 'Digital Library with 45,000+ E-Journals & Delnet Access',
+          timestamp: new Date(Date.now() - 4 * 86400000),
+        },
+      ],
+      documents: [
+        {
+          docType: 'Land Lease Deed',
+          fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          issueDate: new Date('2021-04-10'),
+          expiryDate: new Date(Date.now() + 45 * 86400000), // Expiring in 45 days!
+          status: 'Expiring Soon',
+        },
+        {
+          docType: 'Fire Safety NOC',
+          fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          issueDate: new Date('2025-01-15'),
+          expiryDate: new Date('2027-01-14'),
+          status: 'Valid',
+        },
+        {
+          docType: 'Building Structural Stability',
+          fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          issueDate: new Date('2024-03-20'),
+          expiryDate: new Date('2028-03-19'),
+          status: 'Valid',
+        },
+      ],
+      deficiencies: [
+        {
+          deficiencyId: 'DEF-1042-01',
+          field: 'Faculty Cadre Ratio',
+          description:
+            'Shortfall of 2 Associate Professors in Computer Science & Engineering department as per APH 1:20 teacher-student ratio norm.',
+          raisedBy: 'Dr. A. K. Sharma (RO)',
+          raisedAt: new Date(Date.now() - 2 * 86400000),
+          status: 'Open',
+          responseText: '',
+          reuploadedDocUrl: '',
+        },
+      ],
+      sla: {
+        stageStartedAt: new Date(Date.now() - 2 * 86400000),
+        daysAllowed: 7,
+        daysSpent: 2,
+        daysRemaining: 5,
+        isOverdue: false,
+        escalationLevel: 0,
+        escalatedTo: '',
+        escalationReason: '',
+      },
+      qrCodeDataUrl: qrApex,
+      docketGenerated: false,
+      assignedRO: 'Dr. A. K. Sharma',
+    },
+    {
+      applicationId: 'AICTE-2026-N-0891',
+      institutionName: 'Delhi Engineering & Technology Academy',
+      applicationType: 'New Approval',
+      academicYear: '2026-2027',
+      region: 'Northern',
+      status: 'EVC Scheduled',
+      stage: 'EVC',
+      infrastructureDetails: {
+        landAreaAcres: 7.5,
+        builtUpAreaSqMtr: 18500,
+        totalClassrooms: 40,
+        totalLabs: 28,
+        computerCount: 650,
+        internetBandwidthMbps: 1000,
+        latitude: 28.545,
+        longitude: 77.1926,
+        address: 'Sector 14, Institutional Area, Rohini, New Delhi - 110085',
+      },
+      courses: [
+        {
+          courseName: 'B.Tech',
+          branch: 'Robotics & Automation',
+          level: 'UG',
+          proposedIntake: 60,
+          approvedIntake: 60,
+        },
+        {
+          courseName: 'B.Tech',
+          branch: 'Computer Science',
+          level: 'UG',
+          proposedIntake: 120,
+          approvedIntake: 120,
+        },
+      ],
+      facultyRoster: [
+        {
+          facultyId: 'FAC-2026-0891-01',
+          name: 'Prof. Amit Kumar Jha',
+          designation: 'Assistant Professor',
+          department: 'Information Technology',
+          panNumber: 'JHAAM9023K',
+          aadhaarMasked: 'XXXX-XXXX-5510',
+          highestQualification: 'M.Tech (BITS Pilani)',
+          experienceYears: 5,
+          biometricVerified: false,
+        },
+        {
+          facultyId: 'FAC-2026-0891-02',
+          name: 'Dr. Harish Chandra Choudhary',
+          designation: 'Professor & Dean',
+          department: 'Mechanical Engineering',
+          panNumber: 'CHOUH6612R',
+          aadhaarMasked: 'XXXX-XXXX-6291',
+          highestQualification: 'Ph.D (MNIT Jaipur)',
+          experienceYears: 20,
+          biometricVerified: true,
+        },
+      ],
+      campusPhotos: [
+        {
+          url: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1000&q=80',
+          caption: 'Main Academic Quadrangle',
+          timestamp: new Date(Date.now() - 5 * 86400000),
+        },
+      ],
+      documents: [
+        {
+          docType: 'Land Lease Deed',
+          fileUrl: '',
+          issueDate: new Date('2022-01-01'),
+          expiryDate: new Date('2032-01-01'),
+          status: 'Valid',
+        },
+      ],
+      deficiencies: [],
+      sla: {
+        stageStartedAt: new Date(Date.now() - 5 * 86400000),
+        daysAllowed: 14,
+        daysSpent: 5,
+        daysRemaining: 9,
+        isOverdue: false,
+        escalationLevel: 0,
+      },
+      qrCodeDataUrl: '',
+      docketGenerated: false,
+      assignedEVC: 'Prof. S. N. Deshmukh',
+    },
+    {
+      applicationId: 'AICTE-2026-C-3341',
+      institutionName: 'Central India Institute of Science & Tech, Indore',
+      applicationType: 'Intake Increase',
+      academicYear: '2026-2027',
+      region: 'Central',
+      status: 'Under Scrutiny',
+      stage: 'Scrutiny',
+      infrastructureDetails: {
+        landAreaAcres: 4.8,
+        builtUpAreaSqMtr: 9800,
+        totalClassrooms: 24,
+        totalLabs: 14,
+        computerCount: 320,
+        internetBandwidthMbps: 300,
+        latitude: 22.7196,
+        longitude: 75.8577,
+        address: 'Bypass Road, Manglia, Indore, MP - 453771',
+      },
+      courses: [
+        {
+          courseName: 'M.Tech',
+          branch: 'VLSI Design',
+          level: 'PG',
+          proposedIntake: 30,
+          approvedIntake: 18,
+        },
+      ],
+      facultyRoster: [
+        {
+          facultyId: 'FAC-2026-3341-01',
+          name: 'Dr. Rameshwar Dayal Tiwari',
+          designation: 'Professor',
+          department: 'Computer Science & Engineering',
+          panNumber: 'ABCDE1234F',
+          aadhaarMasked: 'XXXX-XXXX-8921',
+          highestQualification: 'Ph.D (IIT Bombay)',
+          experienceYears: 18,
+          biometricVerified: false,
+        },
+        {
+          facultyId: 'FAC-2026-3341-02',
+          name: 'Dr. Manish Patidar',
+          designation: 'Associate Professor',
+          department: 'Computer Science & Engineering',
+          panNumber: 'PATID3321N',
+          aadhaarMasked: 'XXXX-XXXX-3192',
+          highestQualification: 'Ph.D (RGPV Bhopal)',
+          experienceYears: 10,
+          biometricVerified: true,
+        },
+      ],
+      campusPhotos: [],
+      documents: [],
+      deficiencies: [
+        {
+          deficiencyId: 'DEF-3341-01',
+          field: 'Fire Safety NOC Expired',
+          description:
+            'Fire safety certificate issued by Municipal Corporation expired on 10 Oct 2026. Renewal certificate required.',
+          raisedBy: 'Dr. A. K. Sharma (RO)',
+          raisedAt: new Date(Date.now() - 9 * 86400000),
+          status: 'Open',
+        },
+      ],
+      sla: {
+        stageStartedAt: new Date(Date.now() - 10 * 86400000),
+        daysAllowed: 7,
+        daysSpent: 10,
+        daysRemaining: -3,
+        isOverdue: true,
+        escalationLevel: 1,
+        escalatedTo: 'Regional Director / Bureau Head',
+        escalationReason: 'Regional Warning: Stage overdue by 3 days. Level 1 Notice Dispatched.',
+        escalatedAt: new Date(Date.now() - 2 * 86400000),
+      },
+      qrCodeDataUrl: '',
+      docketGenerated: false,
+    },
+    {
+      applicationId: 'AICTE-2026-S-2105',
+      institutionName: 'Bangalore Polytechnic Institute',
+      applicationType: 'Extension of Approval (EoA)',
+      academicYear: '2026-2027',
+      region: 'Southern',
+      status: 'EVC Completed',
+      stage: 'EVC',
+      infrastructureDetails: {
+        landAreaAcres: 5.0,
+        builtUpAreaSqMtr: 11000,
+        totalClassrooms: 28,
+        totalLabs: 16,
+        computerCount: 400,
+        internetBandwidthMbps: 500,
+        latitude: 12.9716,
+        longitude: 77.5946,
+        address: 'Peenya Industrial Area, Bengaluru, Karnataka - 560058',
+      },
+      courses: [
+        {
+          courseName: 'Diploma',
+          branch: 'Mechanical Engineering',
+          level: 'Diploma',
+          proposedIntake: 60,
+          approvedIntake: 60,
+        },
+      ],
+      campusPhotos: [],
+      documents: [],
+      deficiencies: [],
+      sla: {
+        stageStartedAt: new Date(Date.now() - 11 * 86400000),
+        daysAllowed: 14,
+        daysSpent: 11,
+        daysRemaining: 3,
+        isOverdue: false,
+        escalationLevel: 0,
+      },
+      qrCodeDataUrl: '',
+      docketGenerated: false,
+    },
+    {
+      applicationId: 'AICTE-2026-E-0519',
+      institutionName: 'Bengal College of Engineering & Research, Kolkata',
+      applicationType: 'Extension of Approval (EoA)',
+      academicYear: '2026-2027',
+      region: 'Eastern',
+      status: 'Approved',
+      stage: 'Final Decision',
+      infrastructureDetails: {
+        landAreaAcres: 8.0,
+        builtUpAreaSqMtr: 22000,
+        totalClassrooms: 48,
+        totalLabs: 34,
+        computerCount: 800,
+        internetBandwidthMbps: 1000,
+        latitude: 22.5726,
+        longitude: 88.3639,
+        address: 'Sector V, Salt Lake City, Kolkata, WB - 700091',
+      },
+      courses: [
+        {
+          courseName: 'B.Tech',
+          branch: 'Information Technology',
+          level: 'UG',
+          proposedIntake: 120,
+          approvedIntake: 120,
+        },
+      ],
+      campusPhotos: [],
+      documents: [],
+      deficiencies: [],
+      sla: {
+        stageStartedAt: new Date(Date.now() - 15 * 86400000),
+        daysAllowed: 7,
+        daysSpent: 5,
+        daysRemaining: 2,
+        isOverdue: false,
+        escalationLevel: 0,
+      },
+      qrCodeDataUrl: qrBengal,
+      docketGenerated: true,
+      docketUrl: 'https://aicte-india.org/dockets/AICTE-2026-E-0519.pdf',
+    },
+  ];
+
+  // 3. Document Records (Validity Radar)
+  const documents = [
+    {
+      applicationId: 'AICTE-2026-C-1042',
+      institutionName: 'Apex Institute of Technology, Bhopal',
+      region: 'Central',
+      docType: 'Land Lease Deed',
+      certificateNumber: 'REG-BPL-2021-9981',
+      issuingAuthority: 'Sub-Registrar Office, Bhopal',
+      issueDate: new Date('2021-04-10'),
+      expiryDate: new Date(Date.now() + 45 * 86400000), // 45 days left (Expiring Soon)
+      validityStatus: 'Expiring Soon',
+      daysUntilExpiry: 45,
+      renewalSubmitted: false,
+      fileUrl: 'https://images.unsplash.com/photo-1568667256549-094345857637?auto=format&fit=crop&w=1000&q=80',
+      alertsDispatched: [
+        {
+          channel: 'WhatsApp',
+          timestamp: new Date(Date.now() - 86400000),
+          recipient: '+91-98260-11223',
+          message: 'Notice: Land Lease Deed expires in 45 days. Renew with District Collectorate.',
+        },
+      ],
+    },
+    {
+      applicationId: 'AICTE-2026-C-1042',
+      institutionName: 'Apex Institute of Technology, Bhopal',
+      region: 'Central',
+      docType: 'Fire Safety NOC',
+      certificateNumber: 'FIRE-BPL-2025-1102',
+      issuingAuthority: 'Bhopal Municipal Corporation Fire Wing',
+      issueDate: new Date('2025-01-15'),
+      expiryDate: new Date(Date.now() + 320 * 86400000),
+      validityStatus: 'Valid',
+      daysUntilExpiry: 320,
+      renewalSubmitted: false,
+      fileUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1000&q=80',
+      alertsDispatched: [],
+    },
+    {
+      applicationId: 'AICTE-2026-C-1042',
+      institutionName: 'Apex Institute of Technology, Bhopal',
+      region: 'Central',
+      docType: 'University Affiliation',
+      certificateNumber: 'RGPV-AFF-2025-26-884',
+      issuingAuthority: 'Rajiv Gandhi Proudyogiki Vishwavidyalaya (RGPV)',
+      issueDate: new Date('2025-06-01'),
+      expiryDate: new Date(Date.now() + 240 * 86400000),
+      validityStatus: 'Valid',
+      daysUntilExpiry: 240,
+      renewalSubmitted: false,
+      fileUrl: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1000&q=80',
+      alertsDispatched: [],
+    },
+    {
+      applicationId: 'AICTE-2026-C-3341',
+      institutionName: 'Central India Institute of Science & Tech, Indore',
+      region: 'Central',
+      docType: 'Fire Safety NOC',
+      certificateNumber: 'FIRE-IND-2023-4412',
+      issuingAuthority: 'Chief Fire Officer, Indore Municipal Corp',
+      issueDate: new Date('2023-10-10'),
+      expiryDate: new Date(Date.now() - 14 * 86400000), // Expired 14 days ago!
+      validityStatus: 'Expired',
+      daysUntilExpiry: -14,
+      renewalSubmitted: true,
+      renewalSubmissionNotes: 'Inspection fee paid at Fire Dept, receipt attached for verification.',
+      renewalDocUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1000&q=80',
+      fileUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1000&q=80',
+      alertsDispatched: [
+        {
+          channel: 'Email',
+          timestamp: new Date(Date.now() - 2 * 86400000),
+          recipient: 'registrar@ciist.ac.in',
+          message: 'CRITICAL REGULATORY VIOLATION: Fire Safety NOC has expired.',
+        },
+      ],
+    },
+    {
+      applicationId: 'AICTE-2026-W-4102',
+      institutionName: 'Maharashtra Institute of Technology, Pune',
+      region: 'Western',
+      docType: 'Fire Safety NOC',
+      certificateNumber: 'PMC-FIRE-PUN-2024-902',
+      issuingAuthority: 'Pune Municipal Corporation Fire Dept',
+      issueDate: new Date('2024-11-01'),
+      expiryDate: new Date(Date.now() + 28 * 86400000), // 28 days left!
+      validityStatus: 'Expiring Soon',
+      daysUntilExpiry: 28,
+      renewalSubmitted: false,
+      fileUrl: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=1000&q=80',
+      alertsDispatched: [],
+    },
+    {
+      applicationId: 'AICTE-2026-W-4102',
+      institutionName: 'Maharashtra Institute of Technology, Pune',
+      region: 'Western',
+      docType: 'Land Lease Deed',
+      certificateNumber: 'MAH-PUN-REG-1998-33',
+      issuingAuthority: 'Inspector General of Registration, Maharashtra',
+      issueDate: new Date('2020-03-15'),
+      expiryDate: new Date(Date.now() + 720 * 86400000),
+      validityStatus: 'Valid',
+      daysUntilExpiry: 720,
+      renewalSubmitted: false,
+      fileUrl: 'https://images.unsplash.com/photo-1568667256549-094345857637?auto=format&fit=crop&w=1000&q=80',
+      alertsDispatched: [],
+    },
+    {
+      applicationId: 'AICTE-2026-N-0891',
+      institutionName: 'Delhi Engineering & Technology Academy',
+      region: 'Northern',
+      docType: 'Building Structural Stability',
+      certificateNumber: 'PWD-DEL-STR-2024-81',
+      issuingAuthority: 'Executive Engineer, PWD Delhi',
+      issueDate: new Date('2024-05-15'),
+      expiryDate: new Date(Date.now() + 480 * 86400000),
+      validityStatus: 'Valid',
+      daysUntilExpiry: 480,
+      renewalSubmitted: false,
+      fileUrl: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=1000&q=80',
+      alertsDispatched: [],
+    },
+    {
+      applicationId: 'AICTE-2026-N-0891',
+      institutionName: 'Delhi Engineering & Technology Academy',
+      region: 'Northern',
+      docType: 'Fire Safety NOC',
+      certificateNumber: 'DFS-NOC-2025-6671',
+      issuingAuthority: 'Delhi Fire Service Headquarters',
+      issueDate: new Date('2025-02-10'),
+      expiryDate: new Date(Date.now() + 52 * 86400000), // 52 days left
+      validityStatus: 'Expiring Soon',
+      daysUntilExpiry: 52,
+      renewalSubmitted: false,
+      fileUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1000&q=80',
+      alertsDispatched: [],
+    },
+    {
+      applicationId: 'AICTE-2026-S-2105',
+      institutionName: 'Bangalore Polytechnic Institute',
+      region: 'Southern',
+      docType: 'Pollution Control NOC',
+      certificateNumber: 'KSPCB-BLR-2023-771',
+      issuingAuthority: 'Karnataka State Pollution Control Board',
+      issueDate: new Date('2023-08-15'),
+      expiryDate: new Date(Date.now() - 22 * 86400000), // Expired -22 days
+      validityStatus: 'Expired',
+      daysUntilExpiry: -22,
+      renewalSubmitted: false,
+      fileUrl: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1000&q=80',
+      alertsDispatched: [],
+    },
+    {
+      applicationId: 'AICTE-2026-E-0519',
+      institutionName: 'Bengal College of Engineering & Research, Kolkata',
+      region: 'Eastern',
+      docType: 'Occupancy Certificate',
+      certificateNumber: 'KMDA-OC-2024-551',
+      issuingAuthority: 'Kolkata Metropolitan Development Authority',
+      issueDate: new Date('2024-07-20'),
+      expiryDate: new Date(Date.now() + 310 * 86400000),
+      validityStatus: 'Valid',
+      daysUntilExpiry: 310,
+      renewalSubmitted: false,
+      fileUrl: 'https://images.unsplash.com/photo-1568667256549-094345857637?auto=format&fit=crop&w=1000&q=80',
+      alertsDispatched: [],
+    },
+  ];
+
+  // 4. EVC Inspections (Committee & Geofence Proofs)
+  const inspections = [
+    {
+      applicationId: 'AICTE-2026-N-0891',
+      institutionName: 'Delhi Engineering & Technology Academy',
+      committeeMembers: [
+        {
+          name: 'Prof. S. N. Deshmukh',
+          designation: 'Chairperson',
+          institution: 'National Institute of Technology',
+          email: 'sndeshmukh@nit.ac.in',
+          phone: '+91-94250-77889',
+        },
+        {
+          name: 'Dr. Anita Roy',
+          designation: 'Architectural Expert',
+          institution: 'School of Planning and Architecture, Delhi',
+          email: 'anita.roy@spa.ac.in',
+          phone: '+91-98111-22334',
+        },
+        {
+          name: 'Shri R. K. Mittal',
+          designation: 'Industry Nominee (CII)',
+          institution: 'Tata Consultancy Services',
+          email: 'rk.mittal@cii.in',
+          phone: '+91-99887-76655',
+        },
+      ],
+      scheduledDate: new Date(Date.now() + 2 * 86400000),
+      status: 'Scheduled',
+      collegeCoordinates: { latitude: 28.545, longitude: 77.1926 },
+      inspectionCoordinates: { latitude: 28.5452, longitude: 77.1928, accuracyMeters: 7.2 },
+      distanceMeters: 28,
+      geofenceVerified: true,
+      geofenceThresholdMeters: 200,
+      photoEvidence: [
+        {
+          url: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1000&q=80',
+          tag: 'Advanced AI & IoT Lab',
+          latitude: 28.5451,
+          longitude: 77.1927,
+          timestamp: new Date(Date.now() - 86400000),
+          matchesGeofence: true,
+          notes: '60 high-performance workstations with dual monitors installed and networked.',
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=1000&q=80',
+          tag: 'Central Digital Reading Hall',
+          latitude: 28.5452,
+          longitude: 77.1926,
+          timestamp: new Date(Date.now() - 86400000),
+          matchesGeofence: true,
+          notes: 'Seating capacity of 180 students verified with RFID turnstile gates.',
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1000&q=80',
+          tag: 'Smart Interactive Classroom (L-3)',
+          latitude: 28.545,
+          longitude: 77.1925,
+          timestamp: new Date(Date.now() - 86400000),
+          matchesGeofence: true,
+          notes: 'Acoustics, 85-inch interactive IFP display, and dual camera setup verified.',
+        },
+      ],
+      checklist: [
+        {
+          category: 'Land & Building',
+          item: 'Barrier-free access with operational ramps and lifts for Divyangjan',
+          verified: true,
+          score: 10,
+          remarks: 'Both ramps and automated elevators inspected and found compliant.',
+        },
+        {
+          category: 'Academics & Labs',
+          item: 'Laboratory equipment conforming to AICTE Model Curriculum',
+          verified: true,
+          score: 10,
+          remarks: 'Stock registers and equipment calibration certificates inspected.',
+        },
+        {
+          category: 'Safety & Environment',
+          item: 'Sewage Treatment Plant (STP) & Rainwater Harvesting System',
+          verified: true,
+          score: 9,
+          remarks: 'Operational 50 KLD STP unit verified on campus premises.',
+        },
+        {
+          category: 'Library & Digital',
+          item: 'Digital subscription to IEEE / ACM / ScienceDirect repositories',
+          verified: true,
+          score: 10,
+          remarks: 'Live login session verified on campus IP subnet.',
+        },
+      ],
+      verdict: 'Pending Review',
+      undertakingsRequired: [],
+      overallObservations:
+        'Physical verification in progress. Initial infrastructure meets APH 2024-27 standards.',
+      inspectionChairperson: 'Prof. S. N. Deshmukh',
+    },
+    {
+      applicationId: 'AICTE-2026-S-2105',
+      institutionName: 'Bangalore Polytechnic Institute',
+      committeeMembers: [
+        {
+          name: 'Dr. K. V. Ramanathan',
+          designation: 'Chairperson',
+          institution: 'BMS College of Engineering',
+        },
+      ],
+      scheduledDate: new Date(Date.now() - 3 * 86400000),
+      visitCompletedDate: new Date(Date.now() - 2 * 86400000),
+      status: 'Completed',
+      collegeCoordinates: { latitude: 12.9716, longitude: 77.5946 },
+      inspectionCoordinates: { latitude: 12.9718, longitude: 77.5948, accuracyMeters: 6.0 },
+      distanceMeters: 31,
+      geofenceVerified: true,
+      geofenceThresholdMeters: 200,
+      photoEvidence: [
+        {
+          url: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=1000&q=80',
+          tag: 'Mechatronics Workshop',
+          latitude: 12.9717,
+          longitude: 77.5947,
+          timestamp: new Date(Date.now() - 2 * 86400000),
+          matchesGeofence: true,
+          notes: 'CNC milling machines and hydraulic trainer kits verified in working order.',
+        },
+      ],
+      checklist: [
+        {
+          category: 'Workshop & Machining',
+          item: 'Safety shielding and emergency power cutoff switches',
+          verified: true,
+          score: 9,
+          remarks: 'Satisfactory.',
+        },
+      ],
+      verdict: 'Recommended with Undertaking',
+      undertakingsRequired: ['Procurement of 2 additional CNC simulation software licenses within 60 days'],
+      overallObservations:
+        'Recommended for EoA with conditional undertaking for CNC simulation software expansion.',
+      inspectionChairperson: 'Dr. K. V. Ramanathan',
+    },
+  ];
+
+  // 5. Undertakings (Conditional Compliance Tracking)
+  const undertakings = [
+    {
+      applicationId: 'AICTE-2026-S-2105',
+      institutionName: 'Bangalore Polytechnic Institute',
+      title: 'Procurement of CNC Simulation Software Licenses',
+      clauseReference: 'APH 2024-27 Clause 7.14',
+      description:
+        'Procure and install 2 additional multi-user CNC simulation software perpetual licenses for the Mechanical Workshop.',
+      issuedDate: new Date(Date.now() - 5 * 86400000),
+      dueDate: new Date(Date.now() + 55 * 86400000), // 55 days left
+      daysRemaining: 55,
+      status: 'Pending',
+      complianceProofUrl: '',
+      submissionNotes: '',
+      penaltyAction: 'Freeze of 10% student intake seats in subsequent academic year',
+    },
+    {
+      applicationId: 'AICTE-2026-C-1042',
+      institutionName: 'Apex Institute of Technology, Bhopal',
+      title: 'Establishment of Advanced Robotics & AI IoT Center of Excellence',
+      clauseReference: 'APH 2024-27 Clause 4.8 & NEP 2020 Mandate',
+      description:
+        'Establish dedicated 1500 sq.ft. innovation maker-space with 3D printers, ROS robotics kits, and NVIDIA Jetson edge AI modules.',
+      issuedDate: new Date(Date.now() - 30 * 86400000),
+      dueDate: new Date(Date.now() + 60 * 86400000),
+      daysRemaining: 60,
+      status: 'Proof Submitted',
+      complianceProofUrl:
+        'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1000&q=80',
+      submissionNotes:
+        'Purchase orders PO-2026-0914 and lab installation sign-off report submitted for verification.',
+      submittedAt: new Date(Date.now() - 2 * 86400000),
+      penaltyAction: 'Withdrawal of new course addition approval',
+    },
+  ];
+
+  // 6. Audit Logs
+  const auditLogs = [
+    {
+      applicationId: 'AICTE-2026-C-1042',
+      actorName: 'Dr. Ramesh Chandra (Principal)',
+      role: 'College',
+      action: 'APPLICATION_SUBMITTED',
+      fromState: 'Draft',
+      toState: 'Under Scrutiny',
+      remarks: 'Application submitted for Extension of Approval (EoA) 2026-27 with digital token sign.',
+      ipAddress: '103.24.182.11',
+      timestamp: new Date(Date.now() - 4 * 86400000),
+    },
+    {
+      applicationId: 'AICTE-2026-C-1042',
+      actorName: 'Dr. A. K. Sharma (RO)',
+      role: 'RO',
+      action: 'DEFICIENCY_RAISED',
+      fromState: 'Under Scrutiny',
+      toState: 'Deficiency Raised',
+      remarks: 'Cadre ratio shortfall identified in CSE. Formal objection dispatched to institute.',
+      ipAddress: '14.139.122.9',
+      timestamp: new Date(Date.now() - 2 * 86400000),
+    },
+    {
+      applicationId: 'AICTE-2026-C-3341',
+      actorName: 'AICTE SLA Automated Watchdog',
+      role: 'HQ Super-Admin',
+      action: 'SLA_ESCALATED_L1',
+      fromState: 'Under Scrutiny (Normal)',
+      toState: 'Under Scrutiny (Overdue L1)',
+      remarks: 'Scrutiny stage exceeded 7-day limit. Auto-escalated to Regional Director.',
+      ipAddress: '10.0.4.1',
+      timestamp: new Date(Date.now() - 2 * 86400000),
+    },
+    {
+      applicationId: 'AICTE-2026-N-0891',
+      actorName: 'Dr. A. K. Sharma (RO)',
+      role: 'RO',
+      action: 'PASSED_TO_EVC',
+      fromState: 'Scrutiny Passed',
+      toState: 'EVC Scheduled',
+      remarks: 'Scrutiny completed without objections. EVC inspection allocated to Prof. Deshmukh committee.',
+      ipAddress: '14.139.122.9',
+      timestamp: new Date(Date.now() - 3 * 86400000),
+    },
+  ];
+
+  return { users, applications, documents, inspections, undertakings, auditLogs };
+};
+
+export const seedDatabase = async () => {
+  const seed = await getSeedData();
+
+  // Always populate memoryStore for instantaneous memory lookup & fallback
+  memoryStore.users = seed.users;
+  memoryStore.applications = seed.applications;
+  memoryStore.documents = seed.documents;
+  memoryStore.inspections = seed.inspections;
+  memoryStore.undertakings = seed.undertakings;
+  memoryStore.auditLogs = seed.auditLogs;
+
+  if (getDBStatus()) {
+    try {
+      console.log('[AICTE Pravah Seed] Syncing data with MongoDB Atlas...');
+      await User.deleteMany({});
+      await Application.deleteMany({});
+      await DocumentRecord.deleteMany({});
+      await EVCInspection.deleteMany({});
+      await Undertaking.deleteMany({});
+      await AuditLog.deleteMany({});
+
+      await User.insertMany(seed.users);
+      await Application.insertMany(seed.applications);
+      await DocumentRecord.insertMany(seed.documents);
+      await EVCInspection.insertMany(seed.inspections);
+      await Undertaking.insertMany(seed.undertakings);
+      await AuditLog.insertMany(seed.auditLogs);
+      console.log('[AICTE Pravah Seed] MongoDB Atlas database seeded successfully!');
+    } catch (err) {
+      console.warn('[AICTE Pravah Seed] MongoDB seed error:', err.message);
+    }
+  } else {
+    console.log('[AICTE Pravah Seed] In-Memory Repository initialized with sample realistic data.');
+  }
+};
