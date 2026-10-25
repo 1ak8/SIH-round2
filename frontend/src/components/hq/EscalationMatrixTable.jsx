@@ -96,12 +96,12 @@ export const EscalationMatrixTable = ({ breachedApplications = [], onReassigned 
         <table className="w-full text-left text-xs sm:text-[13px]">
           <thead className="bg-slate-100/80 border-b border-slate-200 text-slate-700 font-bold uppercase tracking-wider text-[11px]">
             <tr>
-              <th className="py-3 px-4 font-bold">Application ID</th>
-              <th className="py-3 px-4 font-bold">Institution Name</th>
-              <th className="py-3 px-4 font-bold">Current Desk</th>
-              <th className="py-3 px-4 font-bold">Aging / Breach</th>
-              <th className="py-3 px-4 font-bold">Escalation Status</th>
-              <th className="py-3 px-4 text-center font-bold">Intervention Controls</th>
+              <th className="py-3 px-4 font-bold whitespace-nowrap">Application ID</th>
+              <th className="py-3 px-4 font-bold min-w-[200px]">Institution Name</th>
+              <th className="py-3 px-4 font-bold whitespace-nowrap">Current Desk</th>
+              <th className="py-3 px-4 font-bold whitespace-nowrap">Aging / Breach</th>
+              <th className="py-3 px-4 font-bold whitespace-nowrap">Escalation Status</th>
+              <th className="py-3 px-4 text-center font-bold whitespace-nowrap">Intervention Controls</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -112,30 +112,30 @@ export const EscalationMatrixTable = ({ breachedApplications = [], onReassigned 
 
               return (
                 <tr key={app.applicationId} className="hover:bg-rose-50/40 transition">
-                  <td className="py-3.5 px-4">
-                    <span className="font-mono font-bold text-rose-900 bg-rose-50 px-2.5 py-1 rounded-lg border border-rose-200/90 text-xs">
+                  <td className="py-3.5 px-4 whitespace-nowrap">
+                    <span className="font-mono font-bold text-white bg-rose-700 px-2.5 py-1 rounded-lg border border-rose-800 text-xs shadow-2xs inline-block">
                       {app.applicationId}
                     </span>
                   </td>
                   <td className="py-3.5 px-4">
-                    <div className="font-bold text-slate-900 text-sm">{app.institutionName}</div>
+                    <div className="font-bold text-slate-900 text-sm leading-snug">{app.institutionName}</div>
                     <div className="text-xs text-slate-500 mt-0.5 font-medium">
                       {app.region} Region • {app.stage} Stage
                     </div>
                   </td>
-                  <td className="py-3.5 px-4 font-medium text-slate-800">
+                  <td className="py-3.5 px-4 font-medium text-slate-800 whitespace-nowrap">
                     {app.assignedRO || 'Regional Scrutiny Officer'}
                   </td>
-                  <td className="py-3.5 px-4">
+                  <td className="py-3.5 px-4 whitespace-nowrap">
                     <span className="inline-flex items-center gap-1.5 font-medium text-rose-700 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200 text-xs">
-                      <Clock className="w-3.5 h-3.5 text-rose-500" />
+                      <Clock className="w-3.5 h-3.5 text-rose-500 shrink-0" />
                       <span>+{overdueDays}d Overdue ({app.sla?.daysSpent}d spent)</span>
                     </span>
                   </td>
-                  <td className="py-3.5 px-4">
+                  <td className="py-3.5 px-4 whitespace-nowrap">
                     {escLevel === 2 ? (
                       <span className="inline-flex items-center gap-1.5 font-semibold text-xs text-white bg-rose-600 px-3 py-1 rounded-full shadow-xs">
-                        <ShieldAlert className="w-3.5 h-3.5" />
+                        <ShieldAlert className="w-3.5 h-3.5 shrink-0" />
                         Level 2: Member Secretary HQ
                       </span>
                     ) : (
@@ -144,7 +144,7 @@ export const EscalationMatrixTable = ({ breachedApplications = [], onReassigned 
                       </span>
                     )}
                   </td>
-                  <td className="py-3.5 px-4 text-center">
+                  <td className="py-3.5 px-4 text-center whitespace-nowrap">
                     <div className="flex items-center justify-center gap-2">
                       <button
                         onClick={() => setReassigningId(app.applicationId)}
@@ -214,7 +214,7 @@ export const EscalationMatrixTable = ({ breachedApplications = [], onReassigned 
             <div key={app.applicationId} className="p-4 space-y-3 bg-white">
               {/* Top Row: App ID + Escalation Pill */}
               <div className="flex items-center justify-between gap-2">
-                <span className="font-mono font-bold text-rose-900 bg-rose-50 px-2 py-0.5 rounded-lg border border-rose-200/90 text-xs">
+                <span className="font-mono font-bold text-white bg-rose-700 px-2.5 py-0.5 rounded-lg border border-rose-800 text-xs whitespace-nowrap">
                   {app.applicationId}
                 </span>
                 {escLevel === 2 ? (

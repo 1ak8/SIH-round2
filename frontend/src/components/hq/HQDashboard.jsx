@@ -35,6 +35,7 @@ export const HQDashboard = () => {
   });
   const [heatmap, setHeatmap] = useState([]);
   const [breachedApps, setBreachedApps] = useState([]);
+  const [pendingApprovals, setPendingApprovals] = useState([]);
   const [showRulesModal, setShowRulesModal] = useState(false);
   const [simulating, setSimulating] = useState(false);
 
@@ -45,15 +46,29 @@ export const HQDashboard = () => {
   const fetchHQData = async () => {
     try {
       setLoading(true);
-      const [mRes, hRes, eRes] = await Promise.all([
+      const [mRes, hRes, eRes, appsRes] = await Promise.all([
         adminAPI.getMetrics(),
         adminAPI.getHeatmap(),
         adminAPI.getEscalationMatrix(),
+        applicationAPI.getAll(),
       ]);
 
       if (mRes.data?.success) setMetrics(mRes.data.metrics);
       if (hRes.data?.success) setHeatmap(hRes.data.heatmap);
       if (eRes.data?.success) setBreachedApps(eRes.data.breachedApplications || []);
+
+      if (appsRes.data?.success) {
+        // Filter applications that are in EVC stage, Completed EVC, or Final Decision stage
+        const readyForCouncil = (appsRes.data.applications || []).filter(
+          (a) =>
+            a.stage === 'EVC' ||
+            a.stage === 'Final Decision' ||
+            a.status === 'EVC Completed' ||
+            a.status === 'EVC Scheduled' ||
+            a.status === 'Approved'
+        );
+        setPendingApprovals(readyForCouncil);
+      }
     } catch (err) {
       console.warn('Error loading HQ data, using live cached data');
     } finally {
@@ -179,6 +194,125 @@ export const HQDashboard = () => {
 
       {/* Regional Bottleneck Heatmap */}
       <RegionalHeatmapChart data={heatmap} />
+
+      {/* Post-EVC Council Clearances & Docket Issuance Table */}
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+        <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="font-bold text-sm sm:text-base text-slate-900 tracking-tight font-sans">
+                Post-EVC Council Clearances & Approval Docket Issuance
+              </h3>
+              <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+                {pendingApprovals.length} Enrolled
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Applications undergoing on-site physical EVC audit or awaiting final Member Secretary seal & Letter of Approval.
+            </p>
+          </div>
+          <span className="text-[11px] font-semibold text-slate-600 bg-slate-100 px-2.5 py-1 rounded-full border border-slate-200/60 shrink-0">
+            Apex Council Jurisdiction
+          </span>
+        </div>
+
+        {/* Desktop / Tablet Table */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full text-left text-xs sm:text-[13px]">
+            <thead className="bg-slate-100/80 border-b border-slate-200 text-slate-700 font-bold uppercase tracking-wider text-[11px]">
+              <tr>
+                <th className="py-3 px-4 font-bold whitespace-nowrap">Application ID</th>
+                <th className="py-3 px-4 font-bold min-w-[200px]">Institution Name</th>
+                <th className="py-3 px-4 font-bold whitespace-nowrap">Region</th>
+                <th className="py-3 px-4 font-bold whitespace-nowrap">Current Status</th>
+                <th className="py-3 px-4 font-bold whitespace-nowrap">Inspection Stage</th>
+                <th className="py-3 px-4 text-center font-bold whitespace-nowrap">Council Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {pendingApprovals.map((app) => (
+                <tr key={app.applicationId} className="hover:bg-slate-50/60 transition">
+                  <td className="py-3.5 px-4 whitespace-nowrap">
+                    <span className="font-mono font-bold text-slate-900 bg-slate-100 px-2.5 py-1 rounded-lg border border-slate-200 text-xs inline-block">
+                      {app.applicationId}
+                    </span>
+                  </td>
+                  <td className="py-3.5 px-4">
+                    <div className="font-bold text-slate-900 text-sm leading-snug">{app.institutionName}</div>
+                    <div className="text-xs text-slate-500 mt-0.5 font-medium">
+                      {app.applicationType}
+                    </div>
+                  </td>
+                  <td className="py-3.5 px-4 font-medium text-slate-700 whitespace-nowrap">
+                    {app.region} Region
+                  </td>
+                  <td className="py-3.5 px-4 whitespace-nowrap">
+                    <span
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${
+                        app.status === 'Approved'
+                          ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                          : app.status === 'EVC Scheduled'
+                          ? 'bg-indigo-50 text-indigo-800 border-indigo-200'
+                          : 'bg-blue-50 text-blue-800 border-blue-200'
+                      }`}
+                    >
+                      {app.status === 'Approved' ? <CheckCircle className="w-3.5 h-3.5" /> : <Clock className="w-3.5 h-3.5" />}
+                      <span>{app.status}</span>
+                    </span>
+                  </td>
+                  <td className="py-3.5 px-4 font-medium text-slate-600 whitespace-nowrap">
+                    {app.stage === 'Final Decision' ? 'Council Sealed' : 'On-Site EVC Audit'}
+                  </td>
+                  <td className="py-3.5 px-4 text-center whitespace-nowrap">
+                    <button
+                      onClick={() => openModal('docket', app)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold transition shadow-2xs cursor-pointer"
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5 text-orange-400" />
+                      <span>{app.status === 'Approved' ? 'View Docket' : 'Review & Seal'}</span>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Mobile View */}
+        <div className="md:hidden divide-y divide-slate-100">
+          {pendingApprovals.map((app) => (
+            <div key={app.applicationId} className="p-4 space-y-2.5 bg-white">
+              <div className="flex items-center justify-between gap-2">
+                <span className="font-mono font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200 text-xs">
+                  {app.applicationId}
+                </span>
+                <span
+                  className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${
+                    app.status === 'Approved'
+                      ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                      : 'bg-indigo-50 text-indigo-800 border-indigo-200'
+                  }`}
+                >
+                  {app.status}
+                </span>
+              </div>
+              <div>
+                <h4 className="font-bold text-slate-900 text-sm leading-snug">{app.institutionName}</h4>
+                <p className="text-xs text-slate-500 mt-0.5">{app.region} Region • {app.applicationType}</p>
+              </div>
+              <div className="pt-1">
+                <button
+                  onClick={() => openModal('docket', app)}
+                  className="w-full flex items-center justify-center gap-1.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold shadow-2xs cursor-pointer"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-orange-400" />
+                  <span>{app.status === 'Approved' ? 'View Official Docket' : 'Review & Seal Approval'}</span>
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* Rules Config Modal */}
       {showRulesModal && (
