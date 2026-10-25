@@ -32,7 +32,9 @@ export const EVCDashboard = () => {
       setLoading(true);
       const res = await evcAPI.getInspections();
       if (res.data?.success) {
-        setInspections(res.data.inspections || []);
+        // Reverse order so latest incoming inspection requests appear first at top
+        const list = [...(res.data.inspections || [])].reverse();
+        setInspections(list);
       }
     } catch (err) {
       showToast(err.message || 'Error loading inspections', 'error');
