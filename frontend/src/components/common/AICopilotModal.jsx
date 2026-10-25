@@ -118,7 +118,7 @@ export const AICopilotModal = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-8 right-8 z-40 flex items-center justify-center w-16 h-16 rounded-full bg-slate-900 text-white shadow-2xl hover:scale-105 active:scale-95 transition-all duration-200 border-2 border-slate-700/80 group"
+          className="fixed bottom-10 right-10 z-40 flex items-center justify-center w-16 h-16 rounded-full bg-slate-900 text-white shadow-2xl hover:scale-105 active:scale-95 transition-all duration-200 border-2 border-slate-700/80 group"
           title="Open AICTE Pravah Sahayak"
           aria-label="Open AICTE Pravah Sahayak"
         >
@@ -148,7 +148,7 @@ export const AICopilotModal = () => {
 
       {/* Floating Chat Drawer */}
       {isOpen && (
-        <div className="fixed bottom-5 right-3 sm:right-6 z-50 w-[94vw] sm:w-[460px] h-[85vh] max-h-[640px] bg-white rounded-2xl border border-slate-200/90 shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200">
+        <div className="fixed bottom-10 right-10 z-50 w-[94vw] sm:w-[460px] h-[85vh] max-h-[640px] bg-white rounded-2xl border border-slate-200/90 shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200">
           
           {/* Top Hairline Accent */}
           <div className="h-1 w-full bg-gradient-to-r from-blue-600 via-cyan-400 to-indigo-600" />
