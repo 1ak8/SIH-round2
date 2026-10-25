@@ -565,6 +565,8 @@ export const getSeedData = async () => {
   // 3. Document Records (Validity Radar)
   const documents = [
     {
+      _id: 'doc_1042_01',
+      id: 'doc_1042_01',
       applicationId: 'AICTE-2026-C-1042',
       institutionName: 'Apex Institute of Technology, Bhopal',
       region: 'Central',
@@ -587,6 +589,8 @@ export const getSeedData = async () => {
       ],
     },
     {
+      _id: 'doc_1042_02',
+      id: 'doc_1042_02',
       applicationId: 'AICTE-2026-C-1042',
       institutionName: 'Apex Institute of Technology, Bhopal',
       region: 'Central',
@@ -602,6 +606,8 @@ export const getSeedData = async () => {
       alertsDispatched: [],
     },
     {
+      _id: 'doc_1042_03',
+      id: 'doc_1042_03',
       applicationId: 'AICTE-2026-C-1042',
       institutionName: 'Apex Institute of Technology, Bhopal',
       region: 'Central',
@@ -617,6 +623,8 @@ export const getSeedData = async () => {
       alertsDispatched: [],
     },
     {
+      _id: 'doc_3341_01',
+      id: 'doc_3341_01',
       applicationId: 'AICTE-2026-C-3341',
       institutionName: 'Central India Institute of Science & Tech, Indore',
       region: 'Central',
@@ -641,6 +649,8 @@ export const getSeedData = async () => {
       ],
     },
     {
+      _id: 'doc_4102_01',
+      id: 'doc_4102_01',
       applicationId: 'AICTE-2026-W-4102',
       institutionName: 'Maharashtra Institute of Technology, Pune',
       region: 'Western',
@@ -656,6 +666,8 @@ export const getSeedData = async () => {
       alertsDispatched: [],
     },
     {
+      _id: 'doc_4102_02',
+      id: 'doc_4102_02',
       applicationId: 'AICTE-2026-W-4102',
       institutionName: 'Maharashtra Institute of Technology, Pune',
       region: 'Western',
@@ -671,6 +683,8 @@ export const getSeedData = async () => {
       alertsDispatched: [],
     },
     {
+      _id: 'doc_0891_01',
+      id: 'doc_0891_01',
       applicationId: 'AICTE-2026-N-0891',
       institutionName: 'Delhi Engineering & Technology Academy',
       region: 'Northern',
@@ -686,6 +700,8 @@ export const getSeedData = async () => {
       alertsDispatched: [],
     },
     {
+      _id: 'doc_0891_02',
+      id: 'doc_0891_02',
       applicationId: 'AICTE-2026-N-0891',
       institutionName: 'Delhi Engineering & Technology Academy',
       region: 'Northern',
@@ -698,6 +714,8 @@ export const getSeedData = async () => {
       daysUntilExpiry: 52,
       renewalSubmitted: false,
       fileUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1000&q=80',
+      alertsDispatched: [],
+    },
       alertsDispatched: [],
     },
     {

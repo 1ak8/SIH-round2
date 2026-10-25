@@ -210,9 +210,21 @@ export const verifyDocumentRenewal = async (req, res) => {
     const { id } = req.params;
     const { verdict = 'Approved', notes = '' } = req.body;
 
-    let doc = memoryStore.documents.find((d) => d._id?.toString() === id || d.id === id);
+    let doc = memoryStore.documents.find(
+      (d) =>
+        d._id?.toString() === id ||
+        d.id === id ||
+        d.certificateNumber === id ||
+        d.docType === id
+    );
     if (!doc && getDBStatus()) {
-      doc = await DocumentRecord.findById(id);
+      doc = await DocumentRecord.findOne({
+        $or: [
+          { _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null },
+          { certificateNumber: id },
+          { docType: id },
+        ],
+      });
     }
 
     if (!doc) {
@@ -258,9 +270,21 @@ export const verifyOnsiteDocument = async (req, res) => {
     const { id } = req.params;
     const { verified = true, notes = '' } = req.body;
 
-    let doc = memoryStore.documents.find((d) => d._id?.toString() === id || d.id === id);
+    let doc = memoryStore.documents.find(
+      (d) =>
+        d._id?.toString() === id ||
+        d.id === id ||
+        d.certificateNumber === id ||
+        d.docType === id
+    );
     if (!doc && getDBStatus()) {
-      doc = await DocumentRecord.findById(id);
+      doc = await DocumentRecord.findOne({
+        $or: [
+          { _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null },
+          { certificateNumber: id },
+          { docType: id },
+        ],
+      });
     }
 
     if (!doc) {
@@ -304,9 +328,21 @@ export const issueShowCauseNotice = async (req, res) => {
     const { id } = req.params;
     const { reason = 'Failure to maintain statutory validity under APH 2024-27 Clause 4.6' } = req.body;
 
-    let doc = memoryStore.documents.find((d) => d._id?.toString() === id || d.id === id);
+    let doc = memoryStore.documents.find(
+      (d) =>
+        d._id?.toString() === id ||
+        d.id === id ||
+        d.certificateNumber === id ||
+        d.docType === id
+    );
     if (!doc && getDBStatus()) {
-      doc = await DocumentRecord.findById(id);
+      doc = await DocumentRecord.findOne({
+        $or: [
+          { _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null },
+          { certificateNumber: id },
+          { docType: id },
+        ],
+      });
     }
 
     if (!doc) {
@@ -357,9 +393,21 @@ export const dispatchAlert = async (req, res) => {
   try {
     const { documentId, customMessage } = req.body;
 
-    let doc = memoryStore.documents.find((d) => d._id?.toString() === documentId);
+    let doc = memoryStore.documents.find(
+      (d) =>
+        d._id?.toString() === documentId ||
+        d.id === documentId ||
+        d.certificateNumber === documentId ||
+        d.docType === documentId
+    );
     if (!doc && getDBStatus()) {
-      doc = await DocumentRecord.findById(documentId);
+      doc = await DocumentRecord.findOne({
+        $or: [
+          { _id: documentId?.match(/^[0-9a-fA-F]{24}$/) ? documentId : null },
+          { certificateNumber: documentId },
+          { docType: documentId },
+        ],
+      });
     }
 
     const institutionName = doc?.institutionName || 'Apex Institute of Technology';

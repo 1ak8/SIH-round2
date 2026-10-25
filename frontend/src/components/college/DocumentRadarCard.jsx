@@ -49,7 +49,9 @@ export const DocumentRadarCard = ({ document, onRenewed, onOpenAlertModal }) => 
     verifiedOnsite,
     showCauseIssued,
     fileUrl,
-  } = document;
+  } = document || {};
+
+  const docIdentifier = _id || document?.id || certificateNumber || docType;
 
   const handleRenewSubmit = async (e) => {
     e.preventDefault();
@@ -82,7 +84,7 @@ export const DocumentRadarCard = ({ document, onRenewed, onOpenAlertModal }) => 
   const handleVerifyRenewal = async () => {
     try {
       setActionLoading(true);
-      const res = await complianceAPI.verifyRenewal(_id || document.id, {
+      const res = await complianceAPI.verifyRenewal(docIdentifier, {
         verdict: 'Approved',
         notes: 'Statutory validity verified against regulatory issuer records.',
       });
@@ -101,7 +103,7 @@ export const DocumentRadarCard = ({ document, onRenewed, onOpenAlertModal }) => 
   const handleVerifyOnsite = async () => {
     try {
       setActionLoading(true);
-      const res = await complianceAPI.verifyOnsite(_id || document.id, {
+      const res = await complianceAPI.verifyOnsite(docIdentifier, {
         verified: !verifiedOnsite,
         notes: 'Original physical certificate and seal inspected on-site by EVC team.',
       });
@@ -126,7 +128,7 @@ export const DocumentRadarCard = ({ document, onRenewed, onOpenAlertModal }) => 
     e.preventDefault();
     try {
       setActionLoading(true);
-      const res = await complianceAPI.issueShowCause(_id || document.id, {
+      const res = await complianceAPI.issueShowCause(docIdentifier, {
         reason: showCauseReason,
       });
       if (res.data?.success) {
