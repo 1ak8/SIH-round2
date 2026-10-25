@@ -3,29 +3,22 @@ import { Check, Clock, AlertTriangle, ShieldAlert } from 'lucide-react';
 
 export const WorkflowStepper = ({ currentStage, status, sla }) => {
   const stages = [
-    { id: 'Draft', label: 'Draft Form', description: 'Application Prepared' },
-    { id: 'Scrutiny', label: 'Scrutiny Desk', description: 'APH 2024–27 Verification' },
-    { id: 'EVC', label: 'EVC Inspection', description: 'On-Site Geo Audit' },
-    { id: 'Final Decision', label: 'Final Approval', description: 'Council Docket Sealed' },
+    { id: 'Submitted', label: '1. Form Submitted', description: 'Application Locked & Filed' },
+    { id: 'Scrutiny', label: '2. RO Scrutiny Desk', description: 'Document & Faculty Audit' },
+    { id: 'EVC', label: '3. EVC Inspection', description: '200m Geofenced Campus Visit' },
+    { id: 'Final Decision', label: '4. Council Approval', description: 'Digital Docket Sealed' },
   ];
 
-  const getStageIndex = (stage) => {
-    switch (stage) {
-      case 'Draft':
-        return 0;
-      case 'Scrutiny':
-        return 1;
-      case 'EVC':
-        return 2;
-      case 'SAC_SHC':
-      case 'Final Decision':
-        return 3;
-      default:
-        return 1;
-    }
+  // Accurate stage resolution: Never show EVC as active or completed if status is Under Scrutiny!
+  const getStageIndex = (stage, appStatus) => {
+    if (appStatus === 'Approved') return 3;
+    if (appStatus === 'EVC Scheduled' || appStatus === 'EVC Completed' || stage === 'EVC') return 2;
+    if (appStatus === 'Under Scrutiny' || appStatus === 'Deficiency Raised' || stage === 'Scrutiny') return 1;
+    if (appStatus === 'Submitted' || stage === 'Submitted' || stage === 'Draft') return 0;
+    return 1;
   };
 
-  const activeIndex = getStageIndex(currentStage);
+  const activeIndex = getStageIndex(currentStage, status);
 
   return (
     <div className="w-full bg-white rounded-xl border border-slate-200/70 p-5 sm:p-6 shadow-xs">

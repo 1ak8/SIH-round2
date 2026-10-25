@@ -40,26 +40,38 @@ export const CollegeDashboard = () => {
     fetchCollegeData();
   }, [refreshKey]);
 
-  const fetchCollegeData = async () => {
+  const fetchCollegeData = async (preferredAppId) => {
     try {
       setLoading(true);
-      // Fetch active application for Apex Institute (or default first app)
-      const appRes = await applicationAPI.getById('AICTE-2026-C-1042');
-      if (appRes.data?.success) {
-        setActiveApp(appRes.data.application);
-        setDocuments(appRes.data.documents || []);
-        setUndertakings(appRes.data.undertakings || []);
+      // If user selected or just filed an application, fetch that; otherwise get the latest application
+      const listRes = await applicationAPI.getAll();
+      const allApps = listRes.data?.applications || [];
+
+      let targetApp = null;
+      if (preferredAppId) {
+        targetApp = allApps.find((a) => a.applicationId === preferredAppId);
+      } else if (activeApp?.applicationId) {
+        targetApp = allApps.find((a) => a.applicationId === activeApp.applicationId);
+      }
+
+      // If not found, pick the most recent one filed by College
+      if (!targetApp && allApps.length > 0) {
+        targetApp = allApps[0];
+      }
+
+      if (targetApp) {
+        const appRes = await applicationAPI.getById(targetApp.applicationId);
+        if (appRes.data?.success) {
+          setActiveApp(appRes.data.application);
+          setDocuments(appRes.data.documents || []);
+          setUndertakings(appRes.data.undertakings || []);
+        } else {
+          setActiveApp(targetApp);
+        }
       }
     } catch (err) {
-      console.warn('Fallback: loading via general applications list');
-      try {
-        const fallbackRes = await applicationAPI.getAll();
-        if (fallbackRes.data?.applications?.length > 0) {
-          setActiveApp(fallbackRes.data.applications[0]);
-        }
-      } catch (e) {
-        showToast('Error loading college data', 'error');
-      }
+      console.warn('Error loading college applications:', err);
+      showToast('Error loading college data', 'error');
     } finally {
       setLoading(false);
     }
@@ -92,6 +104,7 @@ export const CollegeDashboard = () => {
         onCreated={(newApp) => {
           setActiveApp(newApp);
           setShowWizard(false);
+          fetchCollegeData(newApp?.applicationId);
         }}
         onCancel={() => setShowWizard(false)}
       />
