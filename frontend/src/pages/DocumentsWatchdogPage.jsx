@@ -185,19 +185,17 @@ export const DocumentsWatchdogPage = () => {
         </button>
       </div>
 
-      {/* Dynamic Summary Stat Ribbon */}
-      <div className="relative bg-white rounded-2xl border border-slate-200/90 shadow-sm divide-y sm:divide-y-0 sm:divide-x divide-slate-100 grid grid-cols-2 lg:grid-cols-4 overflow-hidden">
-        <div className="absolute top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-[#ea580c] via-[#0c2340] to-[#059669]" />
-
+      {/* Modern Summary Stat Ribbon */}
+      <div className="relative bg-white rounded-xl border border-slate-200/70 shadow-xs divide-y sm:divide-y-0 sm:divide-x divide-slate-100 grid grid-cols-2 lg:grid-cols-4 overflow-hidden">
         {/* Card 1: Total */}
         <div
           onClick={() => setActiveFilter('all')}
-          className={`p-5 lg:p-6 cursor-pointer transition-all duration-150 hover:bg-slate-50/90 flex flex-col justify-between group ${
-            activeFilter === 'all' ? 'bg-slate-50/90' : ''
+          className={`p-5 cursor-pointer transition-all duration-150 hover:bg-slate-50/70 flex flex-col justify-between group ${
+            activeFilter === 'all' ? 'bg-slate-50/90 ring-1 ring-inset ring-slate-200' : ''
           }`}
         >
-          <div className="flex items-center justify-between gap-2 mb-3">
-            <span className="text-xs sm:text-[13px] font-bold text-slate-700 tracking-wide uppercase">
+          <div className="flex items-center justify-between gap-2 mb-2.5">
+            <span className="text-xs font-medium text-slate-500">
               {activeRole === 'college'
                 ? 'My Dockets'
                 : activeRole === 'ro'
@@ -206,15 +204,15 @@ export const DocumentsWatchdogPage = () => {
                 ? 'Inspection Dockets'
                 : 'National Dockets'}
             </span>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 text-slate-600 border border-slate-200/60">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
               All
             </span>
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-slate-900 font-display tabular-nums">
+          <div className="text-2xl sm:text-[26px] font-semibold text-slate-900 tabular-nums">
             {summary.total || documents.length}
           </div>
-          <p className="mt-1.5 text-xs sm:text-[13px] text-slate-600 font-medium">
+          <p className="mt-1 text-xs text-slate-400 font-normal">
             {activeRole === 'college'
               ? 'Apex Institute Certificates'
               : activeRole === 'ro'
@@ -223,142 +221,134 @@ export const DocumentsWatchdogPage = () => {
               ? 'Scheduled Campus Check'
               : 'Pan-India Active Certificates'}
           </p>
-          <div className="mt-3.5 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600">
-            <div className="w-full bg-slate-100 h-1 rounded-full overflow-hidden mr-2">
-              <div className="h-full bg-slate-600 rounded-full w-3/4 group-hover:w-full transition-all duration-500" />
-            </div>
-            <span className="shrink-0 font-bold text-slate-500 group-hover:text-slate-800 transition">View →</span>
+          <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+            <span>Registry Status</span>
+            <span className="font-medium text-slate-600 group-hover:text-slate-900 transition">Filter →</span>
           </div>
         </div>
 
         {/* Card 2: Valid or Pending Clearance */}
         <div
           onClick={() => setActiveFilter(activeRole === 'ro' ? 'pending' : activeRole === 'evc' ? 'verified' : 'valid')}
-          className={`p-5 lg:p-6 cursor-pointer transition-all duration-150 hover:bg-emerald-50/40 flex flex-col justify-between group ${
+          className={`p-5 cursor-pointer transition-all duration-150 hover:bg-slate-50/70 flex flex-col justify-between group ${
             (activeRole === 'ro' && activeFilter === 'pending') ||
             (activeRole === 'evc' && activeFilter === 'verified') ||
             activeFilter === 'valid'
-              ? 'bg-emerald-50/40'
+              ? 'bg-slate-50/90 ring-1 ring-inset ring-slate-200'
               : ''
           }`}
         >
-          <div className="flex items-center justify-between gap-2 mb-3">
-            <span className="text-xs sm:text-[13px] font-bold text-emerald-700 tracking-wide uppercase">
+          <div className="flex items-center justify-between gap-2 mb-2.5">
+            <span className="text-xs font-medium text-slate-500">
               {activeRole === 'ro'
                 ? 'Pending Clearance'
                 : activeRole === 'evc'
                 ? 'Physical Verified'
                 : 'Statutory Valid'}
             </span>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/80">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
               {activeRole === 'ro' ? 'RO Review' : activeRole === 'evc' ? 'On-Site' : 'Clear'}
             </span>
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-emerald-700 font-display tabular-nums">
+          <div className="text-2xl sm:text-[26px] font-semibold text-slate-900 tabular-nums">
             {activeRole === 'ro'
               ? summary.pendingClearance || 1
               : activeRole === 'evc'
               ? summary.verifiedOnsiteCount || 0
               : summary.valid || 0}
           </div>
-          <p className="mt-1.5 text-xs sm:text-[13px] text-slate-600 font-medium">
+          <p className="mt-1 text-xs text-slate-400 font-normal">
             {activeRole === 'ro'
               ? 'Receipts uploaded by colleges'
               : activeRole === 'evc'
               ? 'Stamped inside geofence'
               : '>60 Days Buffer'}
           </p>
-          <div className="mt-3.5 pt-2.5 border-t border-emerald-100/60 flex items-center justify-between text-xs text-emerald-700">
-            <div className="w-full bg-emerald-100 h-1 rounded-full overflow-hidden mr-2">
-              <div className="h-full bg-emerald-500 rounded-full w-3/4 group-hover:w-full transition-all duration-500" />
-            </div>
-            <span className="shrink-0 font-bold group-hover:text-emerald-900 transition">View →</span>
+          <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+            <span>Compliance Check</span>
+            <span className="font-medium text-slate-600 group-hover:text-slate-900 transition">Filter →</span>
           </div>
         </div>
 
         {/* Card 3: Expiring Soon */}
         <div
           onClick={() => setActiveFilter(activeRole === 'evc' ? 'pending' : 'expiring')}
-          className={`p-5 lg:p-6 cursor-pointer transition-all duration-150 hover:bg-amber-50/40 flex flex-col justify-between group ${
+          className={`p-5 cursor-pointer transition-all duration-150 hover:bg-slate-50/70 flex flex-col justify-between group ${
             (activeRole === 'evc' && activeFilter === 'pending') || activeFilter === 'expiring'
-              ? 'bg-amber-50/40'
+              ? 'bg-slate-50/90 ring-1 ring-inset ring-slate-200'
               : ''
           }`}
         >
-          <div className="flex items-center justify-between gap-2 mb-3">
-            <span className="text-xs sm:text-[13px] font-bold text-amber-800 tracking-wide uppercase">
+          <div className="flex items-center justify-between gap-2 mb-2.5">
+            <span className="text-xs font-medium text-slate-500">
               {activeRole === 'evc' ? 'Pending Check' : 'Expiring Soon'}
             </span>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200">
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-amber-50 text-amber-800 border border-amber-200/80">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
               {activeRole === 'evc' ? 'Awaiting Seal' : '<60d Notice'}
             </span>
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-amber-700 font-display tabular-nums">
+          <div className="text-2xl sm:text-[26px] font-semibold text-slate-900 tabular-nums">
             {activeRole === 'evc'
               ? Math.max(0, (summary.total || 0) - (summary.verifiedOnsiteCount || 0))
               : summary.expiringSoon || 0}
           </div>
-          <p className="mt-1.5 text-xs sm:text-[13px] text-slate-600 font-medium">
+          <p className="mt-1 text-xs text-slate-400 font-normal">
             {activeRole === 'evc' ? 'Awaiting physical seal verification' : 'Pre-Expiry Alert Horizon'}
           </p>
-          <div className="mt-3.5 pt-2.5 border-t border-amber-100/60 flex items-center justify-between text-xs text-amber-700">
-            <div className="w-full bg-amber-100 h-1 rounded-full overflow-hidden mr-2">
-              <div className="h-full bg-amber-500 rounded-full w-3/4 group-hover:w-full transition-all duration-500" />
-            </div>
-            <span className="shrink-0 font-bold group-hover:text-amber-900 transition">View →</span>
+          <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+            <span>Pre-Warning</span>
+            <span className="font-medium text-slate-600 group-hover:text-slate-900 transition">Filter →</span>
           </div>
         </div>
 
         {/* Card 4: Expired / Action Required */}
         <div
           onClick={() => setActiveFilter(activeRole === 'evc' ? 'deficient' : 'expired')}
-          className={`p-5 lg:p-6 cursor-pointer transition-all duration-150 hover:bg-rose-50/40 flex flex-col justify-between group ${
+          className={`p-5 cursor-pointer transition-all duration-150 hover:bg-slate-50/70 flex flex-col justify-between group ${
             (activeRole === 'evc' && activeFilter === 'deficient') || activeFilter === 'expired'
-              ? 'bg-rose-50/40'
+              ? 'bg-slate-50/90 ring-1 ring-inset ring-slate-200'
               : ''
           }`}
         >
-          <div className="flex items-center justify-between gap-2 mb-3">
-            <span className="text-xs sm:text-[13px] font-bold text-rose-700 tracking-wide uppercase">
+          <div className="flex items-center justify-between gap-2 mb-2.5">
+            <span className="text-xs font-medium text-slate-500">
               {activeRole === 'evc' ? 'Deficiencies' : 'Expired / Default'}
             </span>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-rose-50 text-rose-700 border border-rose-200/80">
               <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
               Action Req.
             </span>
           </div>
-          <div className="text-2xl sm:text-3xl font-black text-rose-700 font-display tabular-nums">
+          <div className="text-2xl sm:text-[26px] font-semibold text-rose-600 tabular-nums">
             {summary.expired || 0}
           </div>
-          <p className="mt-1.5 text-xs sm:text-[13px] text-slate-600 font-medium">
+          <p className="mt-1 text-xs text-slate-400 font-normal">
             {activeRole === 'college'
               ? 'Upload renewed receipt immediately'
               : activeRole === 'ro'
               ? 'Show-Cause Notices dispatched'
               : 'Statutory breach under Clause 4.6'}
           </p>
-          <div className="mt-3.5 pt-2.5 border-t border-rose-100/60 flex items-center justify-between text-xs text-rose-700">
-            <div className="w-full bg-rose-100 h-1 rounded-full overflow-hidden mr-2">
-              <div className="h-full bg-rose-500 rounded-full w-3/4 group-hover:w-full transition-all duration-500" />
-            </div>
-            <span className="shrink-0 font-bold group-hover:text-rose-900 transition">View →</span>
+          <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+            <span>Immediate Priority</span>
+            <span className="font-medium text-rose-700 group-hover:text-rose-900 transition">Filter →</span>
           </div>
         </div>
       </div>
 
       {/* Filter and Search Bar with Regional Scope Dropdown for Officers */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col lg:flex-row items-center justify-between gap-3">
+      <div className="bg-white p-3 sm:p-3.5 rounded-xl border border-slate-200/70 shadow-xs flex flex-col lg:flex-row items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-1.5 w-full lg:w-auto">
           {getFilterOptions().map((f) => (
             <button
               key={f.id}
               onClick={() => setActiveFilter(f.id)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
                 activeFilter === f.id
-                  ? 'bg-[#0c2340] text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200/70'
+                  ? 'bg-slate-900 text-white shadow-2xs'
+                  : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200/80'
               }`}
             >
               {f.label}
@@ -370,11 +360,11 @@ export const DocumentsWatchdogPage = () => {
           {/* Region selector for RO and HQ */}
           {activeRole !== 'college' && (
             <div className="flex items-center gap-1.5 w-full sm:w-auto">
-              <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
+              <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
               <select
                 value={regionFilter}
                 onChange={(e) => setRegionFilter(e.target.value)}
-                className="text-xs py-2 px-3 rounded-xl border border-slate-300 bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-[#0c2340] cursor-pointer"
+                className="text-xs py-1.5 px-3 rounded-lg border border-slate-200/80 bg-white text-slate-700 font-medium focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 cursor-pointer"
               >
                 <option value="All">All Regions</option>
                 <option value="Central">Central Region</option>
@@ -387,7 +377,7 @@ export const DocumentsWatchdogPage = () => {
           )}
 
           <div className="relative w-full sm:w-72">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
             <input
               type="text"
               placeholder={
@@ -397,7 +387,7 @@ export const DocumentsWatchdogPage = () => {
               }
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full text-xs pl-10 pr-3 py-2 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#0c2340] focus:border-[#0c2340] transition bg-white"
+              className="w-full text-xs pl-8 pr-3 py-1.5 rounded-lg border border-slate-200/80 bg-slate-50/50 hover:bg-white focus:bg-white focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition"
             />
           </div>
         </div>

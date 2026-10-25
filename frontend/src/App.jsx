@@ -75,7 +75,7 @@ const MainContent = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#f1f5f9] bg-grid-subtle">
+    <div className="min-h-screen flex flex-col bg-modern-canvas text-slate-800 antialiased selection:bg-slate-200 selection:text-slate-900">
       <Navbar />
 
       <main className="flex-1 w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
@@ -90,19 +90,19 @@ const MainContent = () => {
         )}
       </main>
 
-      {/* Official Government Footer - Full Screen Width */}
-      <footer className="bg-white/95 backdrop-blur-md border-t border-slate-200/90 mt-12 py-5 text-xs text-slate-500">
+      {/* Modern Minimalist Footer */}
+      <footer className="bg-white/80 backdrop-blur-md border-t border-slate-200/70 mt-12 py-5 text-xs text-slate-500">
         <div className="w-full px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
           <div>
             <p className="font-semibold text-slate-700">
               AICTE Pravah • Problem Statement ID 26262 (Smart India Hackathon Round 2)
             </p>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-400 mt-0.5">
               Integrated Approval Workflow Automation, Compliance Monitoring and Alert Management System
             </p>
           </div>
-          <div className="text-xs font-mono text-slate-500">
-            Govt. of India e-Governance Standard v3.1 | APH 2024-27
+          <div className="text-xs font-mono text-slate-400">
+            Govt. of India e-Governance Standard v3.1 | APH 2024–27
           </div>
         </div>
       </footer>

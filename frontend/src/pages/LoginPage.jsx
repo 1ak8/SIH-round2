@@ -35,9 +35,9 @@ export const LoginPage = () => {
       short: 'Institute',
       email: 'college@gmail.com',
       icon: GraduationCap,
-      color: 'saffron',
       badge: 'Applicant',
-      activeTab: 'border-[#ea580c] bg-orange-50/90 text-orange-950 shadow-sm ring-1 ring-[#ea580c]/30',
+      activeTab: 'border-slate-900 bg-slate-900 text-white shadow-xs',
+      iconActive: 'bg-slate-800 text-white border-slate-700',
       desc: 'File new EoA applications, resolve deficiency objections & track SLA countdown.',
     },
     {
@@ -46,9 +46,9 @@ export const LoginPage = () => {
       short: 'Regional RO',
       email: 'ro@gmail.com',
       icon: Building2,
-      color: 'navy',
       badge: 'Scrutiny Desk',
-      activeTab: 'border-[#0c2340] bg-slate-100/90 text-[#0c2340] shadow-sm ring-1 ring-[#0c2340]/30',
+      activeTab: 'border-slate-900 bg-slate-900 text-white shadow-xs',
+      iconActive: 'bg-slate-800 text-white border-slate-700',
       desc: 'Dual-pane scrutiny desk, APH 2024-27 clause checklist & 7-day stage SLAs.',
     },
     {
@@ -57,9 +57,9 @@ export const LoginPage = () => {
       short: 'EVC Audit',
       email: 'evc@gmail.com',
       icon: ClipboardCheck,
-      color: 'emerald',
       badge: 'Field Audit',
-      activeTab: 'border-emerald-600 bg-emerald-50/90 text-emerald-950 shadow-sm ring-1 ring-emerald-500/30',
+      activeTab: 'border-slate-900 bg-slate-900 text-white shadow-xs',
+      iconActive: 'bg-slate-800 text-white border-slate-700',
       desc: 'Anti-fraud 200m geofenced physical campus inspection & photo verification.',
     },
     {
@@ -68,9 +68,9 @@ export const LoginPage = () => {
       short: 'Central HQ',
       email: 'admin@gmail.com',
       icon: ShieldCheck,
-      color: 'slate',
       badge: 'Apex Council',
-      activeTab: 'border-[#071526] bg-[#0c2340]/10 text-[#0c2340] shadow-sm ring-1 ring-[#0c2340]/30',
+      activeTab: 'border-slate-900 bg-slate-900 text-white shadow-xs',
+      iconActive: 'bg-slate-800 text-white border-slate-700',
       desc: 'National SLA auto-escalation matrix, dynamic policy rules & digital seal approval.',
     },
   ];
@@ -102,146 +102,145 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen lg:h-screen w-full bg-[#f8fafc] bg-grid-subtle flex flex-col justify-between lg:overflow-hidden selection:bg-orange-100 selection:text-orange-900">
+    <div className="min-h-screen lg:h-screen w-full bg-modern-canvas flex flex-col justify-between lg:overflow-hidden selection:bg-slate-200 selection:text-slate-900">
       
       {/* 1. Official National Tricolor Hairline */}
-      <div className="h-1.5 w-full bg-gradient-to-r from-[#f97316] via-white to-[#16a34a] shrink-0 shadow-xs" />
+      <div className="h-[2px] w-full bg-gradient-to-r from-[#f97316] via-white to-[#16a34a] shrink-0" />
 
-      {/* 2. Official Council Header Bar - Full Screen Width */}
-      <header className="bg-white/95 backdrop-blur-md border-b border-slate-200/90 px-6 sm:px-10 lg:px-12 xl:px-16 py-3 shrink-0 shadow-2xs">
+      {/* 2. Official Council Header Bar */}
+      <header className="bg-white/80 backdrop-blur-md border-b border-slate-200/70 px-6 sm:px-10 lg:px-12 xl:px-16 py-3 shrink-0 shadow-2xs">
         <div className="w-full flex items-center justify-between">
-          <div className="flex items-center gap-3.5">
-            {/* National Crest Badge (Option 2: High-Tech Enterprise) */}
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-[#0f172a] to-[#1e293b] border border-blue-500/50 flex items-center justify-center text-white shadow-md shadow-slate-900/10 shrink-0">
-              <span className="font-black text-xl text-cyan-400 font-display">प्र</span>
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-slate-900 border border-slate-700/60 flex items-center justify-center text-white shadow-xs shrink-0">
+              <span className="font-bold text-base text-orange-400 font-sans">प्र</span>
             </div>
             <div>
-              <div className="flex items-center gap-2.5">
-                <span className="text-xl font-black text-slate-900 tracking-tight font-display">
+              <div className="flex items-center gap-2">
+                <span className="text-[17px] font-bold text-slate-900 tracking-tight font-sans">
                   AICTE Pravah
                 </span>
-                <span className="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/80 font-mono">
+                <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200/70">
                   SIH 26262
                 </span>
               </div>
-              <p className="text-xs text-slate-500 font-medium hidden sm:block">
-                अखिल भारतीय तकनीकी शिक्षा परिषद • All India Council for Technical Education
+              <p className="text-xs text-slate-400 font-normal hidden sm:block leading-none mt-0.5">
+                अखिल भारतीय तकनीकी शिक्षा परिषद • Statutory Approval Desk
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2.5 text-xs">
-            <span className="hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold shadow-2xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 font-medium text-[11px]">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
               Statutory Portal Online
             </span>
-            <span className="font-mono text-slate-700 bg-slate-100 px-3 py-1 rounded-lg border border-slate-200/90 font-bold text-[11px]">
+            <span className="font-mono text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200/70 font-semibold text-[11px]">
               APH 2024–27
             </span>
           </div>
         </div>
       </header>
 
-      {/* 3. Main Center Content - Expansive Full Screen Canvas */}
+      {/* 3. Main Center Content */}
       <main className="flex-1 w-full px-6 sm:px-10 lg:px-12 xl:px-16 py-4 lg:py-6 flex items-center justify-center overflow-y-auto lg:overflow-hidden">
-        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-12 items-center">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-14 items-center">
           
-          {/* Left Column: Official Council Overview & 4 Pillars (7 Cols) */}
+          {/* Left Column: Official Council Overview & 4 Pillars */}
           <div className="lg:col-span-7 flex flex-col justify-center space-y-4 xl:space-y-5">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-blue-800 text-xs font-bold uppercase tracking-wider mb-2.5 font-mono">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200/80 text-slate-600 text-xs font-medium mb-3 shadow-2xs">
                 <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
                 Ministry of Education, Government of India
               </div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-[40px] font-black text-slate-900 tracking-tight leading-[1.16] font-display">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-[40px] font-bold text-slate-900 tracking-tight leading-[1.16]">
                 Automated AICTE Approval Workflow & Compliance Monitoring
               </h1>
-              <p className="text-xs sm:text-sm xl:text-base text-slate-600 leading-relaxed max-w-3xl mt-2 font-normal">
-                Next-generation statutory platform enforcing strict 7-day stage SLAs, 200m anti-fraud geofencing, cross-institution Ghost Faculty detection, and verifiable QR approval dockets.
+              <p className="text-xs sm:text-sm xl:text-base text-slate-500 leading-relaxed max-w-2xl mt-2 font-normal">
+                High-assurance statutory governance enforcing strict 7-day stage SLAs, 200m anti-proxy geofencing, cross-institution Ghost Faculty detection, and tamper-proof QR approval dockets.
               </p>
             </div>
 
             {/* 4 Clean Feature Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
-              <div className="p-3.5 sm:p-4 rounded-xl bg-white border border-slate-200/90 shadow-xs hover:border-blue-300 transition group">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center mb-2 group-hover:scale-105 transition">
-                  <FileCheck2 className="w-4 h-4 stroke-[2.2]" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+              <div className="p-4 rounded-xl bg-white border border-slate-200/70 shadow-2xs hover:border-slate-300 transition-all">
+                <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center mb-2.5">
+                  <FileCheck2 className="w-4 h-4" />
                 </div>
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900 font-display">Zero-Deficiency Scrutiny</h3>
-                <p className="text-xs text-slate-500 mt-0.5 leading-snug">
+                <h3 className="text-xs sm:text-sm font-semibold text-slate-900">Zero-Deficiency Scrutiny</h3>
+                <p className="text-xs text-slate-500 mt-1 leading-normal">
                   Automated checks for land contiguity, fire NOCs, and building stability before filing.
                 </p>
               </div>
 
-              <div className="p-3.5 sm:p-4 rounded-xl bg-white border border-slate-200/90 shadow-xs hover:border-cyan-300 transition group">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-cyan-50 text-cyan-700 border border-cyan-100 flex items-center justify-center mb-2 group-hover:scale-105 transition">
-                  <Clock className="w-4 h-4 stroke-[2.2]" />
+              <div className="p-4 rounded-xl bg-white border border-slate-200/70 shadow-2xs hover:border-slate-300 transition-all">
+                <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center mb-2.5">
+                  <Clock className="w-4 h-4" />
                 </div>
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900 font-display">7-Day Stage SLA Engine</h3>
-                <p className="text-xs text-slate-500 mt-0.5 leading-snug">
+                <h3 className="text-xs sm:text-sm font-semibold text-slate-900">7-Day Stage SLA Engine</h3>
+                <p className="text-xs text-slate-500 mt-1 leading-normal">
                   Dual-pane regional officer verification with automated auto-escalation matrix.
                 </p>
               </div>
 
-              <div className="p-3.5 sm:p-4 rounded-xl bg-white border border-slate-200/90 shadow-xs hover:border-indigo-300 transition group">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center mb-2 group-hover:scale-105 transition">
-                  <MapPin className="w-4 h-4 stroke-[2.2]" />
+              <div className="p-4 rounded-xl bg-white border border-slate-200/70 shadow-2xs hover:border-slate-300 transition-all">
+                <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center mb-2.5">
+                  <MapPin className="w-4 h-4" />
                 </div>
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900 font-display">200m Geofenced EVC</h3>
-                <p className="text-xs text-slate-500 mt-0.5 leading-snug">
+                <h3 className="text-xs sm:text-sm font-semibold text-slate-900">200m Geofenced EVC</h3>
+                <p className="text-xs text-slate-500 mt-1 leading-normal">
                   Anti-fraud GPS coordinate lock preventing proxy audits during committee campus visits.
                 </p>
               </div>
 
-              <div className="p-3.5 sm:p-4 rounded-xl bg-white border border-slate-200/90 shadow-xs hover:border-emerald-300 transition group">
-                <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center mb-2 group-hover:scale-105 transition">
-                  <Award className="w-4 h-4 stroke-[2.2]" />
+              <div className="p-4 rounded-xl bg-white border border-slate-200/70 shadow-2xs hover:border-slate-300 transition-all">
+                <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-800 flex items-center justify-center mb-2.5">
+                  <Award className="w-4 h-4" />
                 </div>
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900 font-display">Verifiable QR Dockets</h3>
-                <p className="text-xs text-slate-500 mt-0.5 leading-snug">
+                <h3 className="text-xs sm:text-sm font-semibold text-slate-900">Verifiable QR Dockets</h3>
+                <p className="text-xs text-slate-500 mt-1 leading-normal">
                   Cryptographically sealed approval orders publicly verifiable by banks and students.
                 </p>
               </div>
             </div>
 
             {/* Bottom Proof Strip */}
-            <div className="pt-3 border-t border-slate-200/90 flex flex-wrap items-center gap-6 text-xs text-slate-600 font-medium">
+            <div className="pt-2 border-t border-slate-200/70 flex flex-wrap items-center gap-6 text-xs text-slate-500 font-medium">
               <span className="flex items-center gap-1.5">
-                <Building2 className="w-4 h-4 text-blue-600" />
-                <span><strong>10,000+</strong> Technical Colleges</span>
+                <Building2 className="w-4 h-4 text-slate-700" />
+                <span><strong className="text-slate-800 font-semibold">10,000+</strong> Technical Colleges</span>
               </span>
               <span className="flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-cyan-600" />
-                <span><strong>5</strong> Regional Offices</span>
+                <ShieldCheck className="w-4 h-4 text-slate-700" />
+                <span><strong className="text-slate-800 font-semibold">5</strong> Regional Offices</span>
               </span>
               <span className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                <span><strong>100%</strong> Digital Verification</span>
+                <span><strong className="text-slate-800 font-semibold">100%</strong> Digital Verification</span>
               </span>
             </div>
           </div>
 
-          {/* Right Column: Clean, High-Trust Single Sign-On Console (5 Cols) */}
-          <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-xl shadow-slate-900/5 p-5 sm:p-7">
+          {/* Right Column: Clean, High-Trust Single Sign-On Console */}
+          <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200/80 shadow-[0_16px_36px_-8px_rgba(15,23,42,0.06),0_4px_12px_-2px_rgba(15,23,42,0.02)] p-6 sm:p-7">
             <div className="mb-4">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-xs font-bold text-[#ea580c] uppercase tracking-wider">
+                <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
                   National SSO Gateway
                 </span>
-                <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200/70">
                   Role-Based Access
                 </span>
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight font-display">
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
                 Sign In to Portal
               </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-slate-400 mt-0.5">
                 Select your designated role below to automatically populate access credentials:
               </p>
             </div>
 
-            {/* 4 Clean Role Pills */}
-            <div className="grid grid-cols-2 gap-2.5 mb-3.5">
+            {/* 4 Clean Modern Role Pills */}
+            <div className="grid grid-cols-2 gap-2 mb-3.5">
               {roles.map((r) => {
                 const Icon = r.icon;
                 const isSelected = selectedRole === r.id;
@@ -253,23 +252,23 @@ export const LoginPage = () => {
                     className={`p-2.5 rounded-xl border text-left transition-all duration-150 flex items-start gap-2 cursor-pointer ${
                       isSelected
                         ? r.activeTab
-                        : 'border-slate-200 bg-slate-50/70 hover:bg-slate-100 text-slate-700'
+                        : 'border-slate-200/80 bg-white hover:bg-slate-50 text-slate-700'
                     }`}
                   >
                     <div
-                      className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${
+                      className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5 border ${
                         isSelected
-                          ? 'bg-white shadow-xs'
-                          : 'bg-white border border-slate-200 text-slate-500'
+                          ? r.iconActive
+                          : 'bg-slate-50 border-slate-200 text-slate-500'
                       }`}
                     >
-                      <Icon className="w-4 h-4 stroke-[2.2]" />
+                      <Icon className="w-3.5 h-3.5" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-xs font-bold leading-tight truncate text-slate-900">
+                      <p className={`text-xs font-semibold leading-tight truncate ${isSelected ? 'text-white' : 'text-slate-800'}`}>
                         {r.short}
                       </p>
-                      <p className="text-[10px] text-slate-500 font-mono truncate mt-0.5 leading-none">
+                      <p className={`text-[10px] font-mono truncate mt-0.5 leading-none ${isSelected ? 'text-slate-300' : 'text-slate-400'}`}>
                         {r.email}
                       </p>
                     </div>
@@ -279,17 +278,17 @@ export const LoginPage = () => {
             </div>
 
             {/* Selected Role Context Notice */}
-            <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 mb-3.5 flex items-start gap-2">
+            <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 mb-3.5 flex items-start gap-2 text-xs text-slate-600">
               <span className="text-sm shrink-0 mt-0.5">🏛️</span>
-              <p className="text-xs text-slate-600 leading-snug">
-                Logging in as <strong className="text-slate-900 font-bold">{currentRole.label}</strong>. {currentRole.desc}
+              <p className="leading-snug">
+                Accessing as <strong className="text-slate-900 font-semibold">{currentRole.label}</strong>. {currentRole.desc}
               </p>
             </div>
 
             {/* Form */}
             <form onSubmit={handleLogin} className="space-y-3.5">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
+                <label className="block text-xs font-medium text-slate-700 mb-1">
                   Official Panel Email
                 </label>
                 <div className="relative">
@@ -300,18 +299,18 @@ export const LoginPage = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="e.g. college@gmail.com"
-                    className="w-full text-xs sm:text-sm pl-10 pr-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition bg-white"
+                    className="w-full text-xs sm:text-sm pl-10 pr-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition bg-slate-50/50 hover:bg-white focus:bg-white"
                   />
                 </div>
               </div>
 
               <div>
                 <div className="flex justify-between items-center mb-1">
-                  <label className="text-xs font-bold text-slate-700">
+                  <label className="text-xs font-medium text-slate-700">
                     Security Password
                   </label>
-                  <span className="text-[11px] text-slate-500 font-mono">
-                    Demo: <strong className="text-slate-800">aicte123</strong>
+                  <span className="text-[11px] text-slate-400 font-mono">
+                    Demo: <strong className="text-slate-700 font-semibold">aicte123</strong>
                   </span>
                 </div>
                 <div className="relative">
@@ -321,7 +320,7 @@ export const LoginPage = () => {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full text-xs sm:text-sm pl-10 pr-10 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition font-mono bg-white"
+                    className="w-full text-xs sm:text-sm pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition font-mono bg-slate-50/50 hover:bg-white focus:bg-white"
                   />
                   <button
                     type="button"
@@ -336,21 +335,21 @@ export const LoginPage = () => {
               <button
                 type="submit"
                 disabled={submitting || loading}
-                className="w-full py-2.5 sm:py-3 bg-[#0c2340] hover:bg-[#163a66] active:bg-[#071526] text-white font-bold text-xs sm:text-sm rounded-xl shadow-md shadow-[#0c2340]/20 transition flex items-center justify-center gap-2 group disabled:opacity-50 cursor-pointer"
+                className="w-full py-2.5 sm:py-3 bg-slate-900 hover:bg-slate-800 active:bg-black text-white font-semibold text-xs sm:text-sm rounded-xl shadow-xs transition flex items-center justify-center gap-2 group disabled:opacity-50 cursor-pointer"
               >
                 {submitting ? (
                   <span>Verifying Credentials...</span>
                 ) : (
                   <>
                     <span>Enter {currentRole.label} Workspace</span>
-                    <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-1 transition" />
+                    <ArrowRight className="w-4 h-4 text-white group-hover:translate-x-0.5 transition-transform" />
                   </>
                 )}
               </button>
             </form>
 
             {/* Bottom Security Footer */}
-            <div className="pt-3 mt-4 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+            <div className="pt-3 mt-4 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
               <span className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
                 256-Bit TLS Encrypted
@@ -362,8 +361,8 @@ export const LoginPage = () => {
         </div>
       </main>
 
-      {/* 4. Official Council Footer - Full Screen Width */}
-      <footer className="bg-white border-t border-slate-200 py-2.5 px-6 sm:px-10 lg:px-12 xl:px-16 text-xs text-slate-500 shrink-0">
+      {/* 4. Official Council Footer */}
+      <footer className="bg-white/80 border-t border-slate-200/70 py-2.5 px-6 sm:px-10 lg:px-12 xl:px-16 text-xs text-slate-400 shrink-0">
         <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-1 text-center sm:text-left">
           <span>
             All India Council for Technical Education • Ministry of Education, Government of India

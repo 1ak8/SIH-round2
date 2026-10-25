@@ -87,14 +87,14 @@ export const HQDashboard = () => {
           <div className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-1">
             <span className="font-semibold text-slate-700">Apex Council</span>
             <span className="text-slate-300">/</span>
-            <span className="font-mono text-slate-800 font-bold">New Delhi HQ</span>
+            <span className="font-mono text-slate-600 font-medium">New Delhi HQ</span>
             <span className="text-slate-300">•</span>
-            <span className="text-slate-400">Central Approval Console</span>
+            <span>Central Approval Console</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-display">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
             Central Approval Governance & Escalation Console
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl">
+          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl leading-relaxed">
             National clearance velocity, regional bottleneck analysis, centralized SLA auto-escalation matrix, and dynamic handbook policy engine.
           </p>
         </div>
@@ -102,33 +102,33 @@ export const HQDashboard = () => {
         <div className="flex flex-wrap items-center gap-2 shrink-0">
           <button
             onClick={() => setShowRulesModal(true)}
-            className="flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-bold rounded-xl shadow-2xs transition cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/80 text-xs font-medium rounded-xl shadow-2xs transition cursor-pointer"
           >
-            <Sliders className="w-4 h-4 text-slate-600" />
+            <Sliders className="w-3.5 h-3.5 text-slate-500" />
             <span>Rules Engine</span>
           </button>
 
           <button
             onClick={handleSimulateBreach}
             disabled={simulating}
-            className="flex items-center gap-1.5 px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold rounded-xl shadow-2xs transition cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-2 bg-amber-50 hover:bg-amber-100/70 text-amber-900 border border-amber-200/80 text-xs font-medium rounded-xl shadow-2xs transition cursor-pointer"
           >
-            <Flame className="w-4 h-4 text-rose-600" />
+            <Flame className="w-3.5 h-3.5 text-amber-600" />
             <span>Simulate Breach (+10d)</span>
           </button>
 
           <button
             onClick={() => navigateTo('audit')}
-            className="flex items-center gap-1.5 px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 text-xs font-bold rounded-xl shadow-2xs transition cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium rounded-xl shadow-2xs transition cursor-pointer"
           >
-            <History className="w-4 h-4 text-blue-600" />
+            <History className="w-3.5 h-3.5 text-slate-300" />
             <span>Audit Ledger</span>
           </button>
         </div>
       </div>
 
       {/* KPI Ribbon (Unified Connected Surface) */}
-      <div className="relative bg-white rounded-2xl border border-slate-200/90 shadow-sm divide-y sm:divide-y-0 sm:divide-x divide-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 overflow-hidden">
+      <div className="relative bg-white rounded-xl border border-slate-200/70 shadow-xs divide-y sm:divide-y-0 sm:divide-x divide-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 overflow-hidden">
         <MetricCard
           title="Total Pan-India Files"
           value={metrics.totalApplications}

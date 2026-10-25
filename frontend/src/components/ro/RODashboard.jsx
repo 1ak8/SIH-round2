@@ -85,31 +85,31 @@ export const RODashboard = () => {
       {/* Clean Boxless Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-1">
         <div>
-          <div className="flex items-center gap-2 text-xs sm:text-[13px] font-medium text-slate-600 mb-1">
-            <span className="font-semibold text-slate-800">Regional Desk</span>
+          <div className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-1">
+            <span className="font-semibold text-slate-700">Regional Desk</span>
             <span className="text-slate-300">/</span>
-            <span className="font-mono text-[#ea580c] font-bold">Central Region (Bhopal)</span>
+            <span className="font-mono text-slate-600 font-medium">Central Region (Bhopal)</span>
             <span className="text-slate-300">•</span>
-            <span className="text-slate-500">APH 2024–27</span>
+            <span>APH 2024–27</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-display">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
             Regional Officer Scrutiny Desk
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl leading-relaxed">
             Dual-pane statutory verification against Approval Process Handbook norms & 7-day stage SLAs.
           </p>
         </div>
 
         <div className="flex items-center gap-2.5 shrink-0">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 text-[#0c2340] border border-slate-200 text-xs sm:text-[13px] font-bold font-mono">
-            <Clock className="w-4 h-4 text-[#ea580c]" />
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white text-slate-700 border border-slate-200/80 text-xs sm:text-[13px] font-medium font-mono shadow-2xs">
+            <Clock className="w-3.5 h-3.5 text-slate-500" />
             <span>Stage SLA: 7 Working Days</span>
           </div>
         </div>
       </div>
 
       {/* KPI Ribbon (Unified Connected Surface) */}
-      <div className="relative bg-white rounded-2xl border border-slate-200/90 shadow-sm divide-y sm:divide-y-0 sm:divide-x divide-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 overflow-hidden">
+      <div className="relative bg-white rounded-xl border border-slate-200/70 shadow-xs divide-y sm:divide-y-0 sm:divide-x divide-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 overflow-hidden">
         <MetricCard
           title="Under Scrutiny"
           value={queueData.underScrutiny.length}
@@ -164,7 +164,7 @@ export const RODashboard = () => {
       </div>
 
       {/* Filter Tabs & Search Bar */}
-      <div className="bg-white p-3 sm:p-3.5 rounded-2xl border border-slate-200/90 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="bg-white p-3 sm:p-3.5 rounded-xl border border-slate-200/70 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-1.5 w-full sm:w-auto">
           {[
             { id: 'all', label: 'All Files', count: queueData.all.length },
@@ -178,20 +178,20 @@ export const RODashboard = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs sm:text-[13px] font-semibold transition-all cursor-pointer ${
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs sm:text-[13px] font-medium transition-all cursor-pointer ${
                   isActive
-                    ? 'bg-[#0c2340] text-white shadow-xs'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900'
+                    ? 'bg-slate-900 text-white shadow-2xs'
+                    : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200/80'
                 }`}
               >
                 <span>{tab.label}</span>
                 <span
-                  className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                  className={`text-[11px] font-medium px-1.5 py-0.2 rounded-md ${
                     isActive
-                      ? 'bg-white/20 text-white'
+                      ? 'bg-slate-800 text-slate-200'
                       : tab.id === 'overdue' && tab.count > 0
-                      ? 'bg-rose-100 text-rose-700'
-                      : 'bg-slate-200/90 text-slate-700'
+                      ? 'bg-rose-100 text-rose-700 font-semibold'
+                      : 'bg-slate-100 text-slate-600'
                   }`}
                 >
                   {tab.count}
@@ -203,13 +203,13 @@ export const RODashboard = () => {
 
         {/* Search */}
         <div className="relative w-full sm:w-72">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
           <input
             type="text"
             placeholder="Search Application ID, Institute..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full text-xs sm:text-[13px] pl-9 pr-8 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0c2340] focus:border-[#0c2340] bg-slate-50/70 transition font-medium"
+            className="w-full text-xs sm:text-[13px] pl-8 pr-8 py-1.5 rounded-lg border border-slate-200/80 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 bg-slate-50/50 hover:bg-white focus:bg-white transition font-normal"
           />
           {searchQuery && (
             <button

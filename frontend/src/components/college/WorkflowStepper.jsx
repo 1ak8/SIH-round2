@@ -3,10 +3,10 @@ import { Check, Clock, AlertTriangle, ShieldAlert } from 'lucide-react';
 
 export const WorkflowStepper = ({ currentStage, status, sla }) => {
   const stages = [
-    { id: 'Draft', label: '1. Draft Form', description: 'Application Prepared' },
-    { id: 'Scrutiny', label: '2. Scrutiny Desk', description: 'APH 2024-27 Verification' },
-    { id: 'EVC', label: '3. EVC Inspection', description: 'On-Site Geo Audit' },
-    { id: 'Final Decision', label: '4. Final Approval', description: 'Council Clearance & Docket' },
+    { id: 'Draft', label: 'Draft Form', description: 'Application Prepared' },
+    { id: 'Scrutiny', label: 'Scrutiny Desk', description: 'APH 2024–27 Verification' },
+    { id: 'EVC', label: 'EVC Inspection', description: 'On-Site Geo Audit' },
+    { id: 'Final Decision', label: 'Final Approval', description: 'Council Docket Sealed' },
   ];
 
   const getStageIndex = (stage) => {
@@ -28,23 +28,23 @@ export const WorkflowStepper = ({ currentStage, status, sla }) => {
   const activeIndex = getStageIndex(currentStage);
 
   return (
-    <div className="w-full bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-5">
+    <div className="w-full bg-white rounded-xl border border-slate-200/70 p-5 sm:p-6 shadow-xs">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-6">
         <div>
-          <h4 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">
-            Live Statutory Approval Pipeline
-          </h4>
-          <p className="text-sm sm:text-base font-extrabold text-[#0c2340] font-display">
-            Current Stage: <span className="text-[#ea580c]">{stages[activeIndex]?.label}</span>
+          <span className="text-xs font-medium text-slate-400 block mb-0.5">
+            Statutory Approval Pipeline
+          </span>
+          <p className="text-base font-semibold text-slate-900">
+            Current Stage: <span className="text-slate-900 underline underline-offset-4 decoration-slate-300">{stages[activeIndex]?.label}</span>
           </p>
         </div>
         {sla && (
           <div className="text-right">
             <span
-              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border ${
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium border ${
                 sla.isOverdue
-                  ? 'bg-rose-50 text-rose-700 border-rose-200'
-                  : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                  ? 'bg-rose-50 text-rose-700 border-rose-200/80'
+                  : 'bg-emerald-50 text-emerald-700 border-emerald-200/80'
               }`}
             >
               <Clock className="w-3.5 h-3.5" />
@@ -57,11 +57,11 @@ export const WorkflowStepper = ({ currentStage, status, sla }) => {
       </div>
 
       {/* Stepper Bar */}
-      <div className="relative flex items-center justify-between px-2 sm:px-4">
+      <div className="relative flex items-center justify-between px-2 sm:px-6">
         {/* Connecting Line */}
-        <div className="absolute left-6 right-6 top-4 h-1 bg-slate-200 -z-0">
+        <div className="absolute left-8 right-8 top-4 h-[2px] bg-slate-100 -z-0">
           <div
-            className="h-full bg-gradient-to-r from-emerald-500 to-[#ea580c] transition-all duration-500 rounded-full"
+            className="h-full bg-slate-900 transition-all duration-500 rounded-full"
             style={{ width: `${(activeIndex / (stages.length - 1)) * 100}%` }}
           />
         </div>
@@ -76,22 +76,22 @@ export const WorkflowStepper = ({ currentStage, status, sla }) => {
               className="flex flex-col items-center text-center relative z-10 group"
             >
               <div
-                className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-200 shadow-sm ${
+                className={`w-8 h-8 rounded-full flex items-center justify-center font-medium text-xs transition-all duration-200 ${
                   isCompleted
-                    ? 'bg-emerald-600 text-white ring-4 ring-emerald-100'
+                    ? 'bg-slate-900 text-white shadow-2xs'
                     : isCurrent
-                    ? 'bg-[#ea580c] text-white ring-4 ring-orange-100 scale-105'
-                    : 'bg-white border-2 border-slate-300 text-slate-400'
+                    ? 'bg-slate-900 text-white ring-4 ring-slate-100 shadow-2xs'
+                    : 'bg-white border-2 border-slate-200 text-slate-400'
                 }`}
               >
-                {isCompleted ? <Check className="w-4 h-4 stroke-[3]" /> : idx + 1}
+                {isCompleted ? <Check className="w-3.5 h-3.5 stroke-[2.5]" /> : idx + 1}
               </div>
               <span
-                className={`mt-2 text-xs font-bold max-w-[100px] leading-tight ${
+                className={`mt-2 text-xs font-medium max-w-[105px] leading-tight ${
                   isCurrent
-                    ? 'text-[#ea580c]'
+                    ? 'text-slate-900 font-semibold'
                     : isCompleted
-                    ? 'text-slate-800'
+                    ? 'text-slate-700'
                     : 'text-slate-400'
                 }`}
               >

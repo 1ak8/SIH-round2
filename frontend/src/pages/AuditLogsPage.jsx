@@ -78,8 +78,8 @@ export const AuditLogsPage = () => {
             <span className="text-slate-300">/</span>
             <span className="font-mono text-emerald-700 font-bold">Cryptographic Ledger</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-display flex items-center gap-2">
-            <Lock className="w-7 h-7 text-emerald-600" />
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+            <Lock className="w-6 h-6 text-emerald-600" />
             <span>
               {activeRole === 'college'
                 ? 'Institutional Statutory Audit Trail'
@@ -90,7 +90,7 @@ export const AuditLogsPage = () => {
                 : 'National Sovereign Statutory Audit Trail'}
             </span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl">
+          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl leading-relaxed">
             {activeRole === 'college'
               ? `Cryptographically verified chronological log of all statutory submissions, deficiency responses, and officer clearances for ${user?.institutionName || 'Apex Institute of Technology, Bhopal'}.`
               : activeRole === 'ro'
@@ -103,24 +103,24 @@ export const AuditLogsPage = () => {
 
         <button
           onClick={fetchAuditLogs}
-          className="flex items-center gap-2 px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold rounded-xl border border-slate-200 shadow-2xs transition shrink-0 cursor-pointer"
+          className="flex items-center gap-2 px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-xl border border-slate-200/80 shadow-2xs transition shrink-0 cursor-pointer"
         >
-          <RefreshCw className="w-4 h-4 text-emerald-600" />
+          <RefreshCw className="w-3.5 h-3.5 text-slate-500" />
           <span>Refresh Ledger</span>
         </button>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200/90 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="bg-white p-3 sm:p-3.5 rounded-xl border border-slate-200/70 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-1.5 w-full sm:w-auto">
           {['All', 'College', 'RO', 'EVC', 'HQ Super-Admin'].map((r) => (
             <button
               key={r}
               onClick={() => setRoleFilter(r)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
                 roleFilter === r
-                  ? 'bg-[#0c2340] text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200/70'
+                  ? 'bg-slate-900 text-white shadow-2xs'
+                  : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200/80'
               }`}
             >
               {r}
@@ -129,29 +129,29 @@ export const AuditLogsPage = () => {
         </div>
 
         <form onSubmit={handleSearchSubmit} className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
           <input
             type="text"
             placeholder="Search action, actor, applicationId..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full text-xs pl-10 pr-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#0c2340] focus:border-[#0c2340] transition bg-white"
+            className="w-full text-xs pl-8 pr-3 py-1.5 rounded-lg border border-slate-200/80 bg-slate-50/50 hover:bg-white focus:bg-white focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition font-normal"
           />
         </form>
       </div>
 
       {/* Audit Timeline */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-8 shadow-sm">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
+      <div className="bg-white rounded-xl border border-slate-200/70 p-6 sm:p-7 shadow-xs">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-6">
           <div>
-            <h3 className="text-sm font-bold text-slate-900 font-display">
+            <h3 className="text-sm font-semibold text-slate-900">
               Immutable Action Records ({logs.length})
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-400">
               Chronological log ordered by statutory execution timestamp.
             </p>
           </div>
-          <span className="text-[11px] font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200/80 font-mono">
+          <span className="text-[11px] font-medium text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-md border border-slate-200/60 font-mono">
             {activeRole === 'college'
               ? 'Institutional Scope'
               : roleFilter === 'All'
