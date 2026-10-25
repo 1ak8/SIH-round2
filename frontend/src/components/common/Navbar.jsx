@@ -164,7 +164,7 @@ export const Navbar = () => {
           </nav>
 
           {/* Right Controls: User Profile & Actions */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             
             {/* Demo SLA Breach Simulation (Only for HQ & RO desks) */}
             {(activeRole === 'hq' || activeRole === 'ro') && (
@@ -180,15 +180,15 @@ export const Navbar = () => {
             )}
 
             {/* Current Logged-in User Profile Display */}
-            <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-slate-200/70 bg-white shadow-2xs">
+            <div className="flex items-center gap-2 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 rounded-xl border border-slate-200/70 bg-white shadow-2xs max-w-[130px] sm:max-w-none">
               <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 border ${currentRoleObj.color}`}>
                 <CurrentIcon className="w-3.5 h-3.5" />
               </div>
-              <div className="hidden sm:block text-left">
-                <p className="text-xs font-semibold text-slate-800 leading-tight">
+              <div className="text-left min-w-0">
+                <p className="text-xs font-semibold text-slate-800 leading-tight truncate">
                   {currentRoleObj.label}
                 </p>
-                <p className="text-[11px] text-slate-400 font-mono leading-none mt-0.5 truncate max-w-[150px]">
+                <p className="text-[10px] sm:text-[11px] text-slate-400 font-mono leading-none mt-0.5 truncate hidden sm:block max-w-[150px]">
                   {user?.email || currentRoleObj.email}
                 </p>
               </div>
@@ -198,13 +198,61 @@ export const Navbar = () => {
             <button
               onClick={handleLogout}
               title="Sign Out of Portal"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-slate-600 hover:text-rose-600 hover:bg-rose-50/70 border border-slate-200/70 transition shadow-2xs cursor-pointer bg-white"
+              className="flex items-center justify-center gap-1.5 p-2 sm:px-3 sm:py-1.5 rounded-xl text-xs font-medium text-slate-600 hover:text-rose-600 hover:bg-rose-50/70 border border-slate-200/70 transition shadow-2xs cursor-pointer bg-white"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Logout</span>
             </button>
 
           </div>
+        </div>
+
+        {/* Mobile Navigation Tabs Bar (Visible on mobile screens < md) */}
+        <div className="flex md:hidden items-center justify-around bg-slate-100/90 p-1 rounded-xl border border-slate-200/70 mb-2 gap-1">
+          <button
+            onClick={() => navigateTo('dashboard')}
+            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs transition cursor-pointer ${
+              currentView === 'dashboard'
+                ? 'bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/60'
+                : 'text-slate-600 hover:text-slate-900 font-medium'
+            }`}
+          >
+            <LayoutDashboard className="w-3.5 h-3.5 text-blue-600" />
+            <span className="truncate">
+              {activeRole === 'college'
+                ? 'Applications'
+                : activeRole === 'ro'
+                ? 'Scrutiny'
+                : activeRole === 'evc'
+                ? 'Visits'
+                : 'Console'}
+            </span>
+          </button>
+
+          <button
+            onClick={() => navigateTo('radar')}
+            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs transition relative cursor-pointer ${
+              currentView === 'radar'
+                ? 'bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/60'
+                : 'text-slate-600 hover:text-slate-900 font-medium'
+            }`}
+          >
+            <Radar className="w-3.5 h-3.5 text-orange-600" />
+            <span>Watchdog</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+          </button>
+
+          <button
+            onClick={() => navigateTo('audit')}
+            className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs transition cursor-pointer ${
+              currentView === 'audit'
+                ? 'bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/60'
+                : 'text-slate-600 hover:text-slate-900 font-medium'
+            }`}
+          >
+            <History className="w-3.5 h-3.5 text-slate-600" />
+            <span>Audit</span>
+          </button>
         </div>
       </div>
     </header>

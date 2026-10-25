@@ -80,18 +80,18 @@ export const HQDashboard = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6 max-w-full overflow-hidden">
       {/* Clean Boxless Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-1">
-        <div>
-          <div className="flex items-center gap-2 text-xs font-medium text-slate-500 mb-1">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-3 sm:gap-4 pb-1">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-medium text-slate-500 mb-1">
             <span className="font-semibold text-slate-700">Apex Council</span>
             <span className="text-slate-300">/</span>
             <span className="font-mono text-slate-600 font-medium">New Delhi HQ</span>
             <span className="text-slate-300">•</span>
             <span>Central Approval Console</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 tracking-tight leading-tight">
             Central Approval Governance & Escalation Console
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl leading-relaxed">
@@ -99,36 +99,37 @@ export const HQDashboard = () => {
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 shrink-0">
+        {/* Action Buttons: Responsive Wrap / Grid on Mobile */}
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 shrink-0 pt-1 sm:pt-0">
           <button
             onClick={() => setShowRulesModal(true)}
-            className="flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/80 text-xs font-medium rounded-xl shadow-2xs transition cursor-pointer"
+            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/80 text-xs font-medium rounded-xl shadow-2xs transition cursor-pointer"
           >
-            <Sliders className="w-3.5 h-3.5 text-slate-500" />
-            <span>Rules Engine</span>
+            <Sliders className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+            <span className="truncate">Rules Engine</span>
           </button>
 
           <button
             onClick={handleSimulateBreach}
             disabled={simulating}
-            className="flex items-center gap-1.5 px-3 py-2 bg-amber-50 hover:bg-amber-100/70 text-amber-900 border border-amber-200/80 text-xs font-medium rounded-xl shadow-2xs transition cursor-pointer"
+            className="flex items-center justify-center gap-1.5 px-3 py-2 bg-amber-50 hover:bg-amber-100/70 text-amber-900 border border-amber-200/80 text-xs font-medium rounded-xl shadow-2xs transition cursor-pointer"
           >
-            <Flame className="w-3.5 h-3.5 text-amber-600" />
-            <span>Simulate Breach (+10d)</span>
+            <Flame className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+            <span className="truncate">Simulate (+10d)</span>
           </button>
 
           <button
             onClick={() => navigateTo('audit')}
-            className="flex items-center gap-1.5 px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium rounded-xl shadow-2xs transition cursor-pointer"
+            className="col-span-2 sm:col-span-1 flex items-center justify-center gap-1.5 px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium rounded-xl shadow-2xs transition cursor-pointer"
           >
-            <History className="w-3.5 h-3.5 text-slate-300" />
+            <History className="w-3.5 h-3.5 text-slate-300 shrink-0" />
             <span>Audit Ledger</span>
           </button>
         </div>
       </div>
 
-      {/* KPI Ribbon (Unified Connected Surface) */}
-      <div className="relative bg-white rounded-xl border border-slate-200/70 shadow-xs divide-y sm:divide-y-0 sm:divide-x divide-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 overflow-hidden">
+      {/* KPI Ribbon (Fully Responsive Connected Grid) */}
+      <div className="relative bg-white rounded-2xl sm:rounded-xl border border-slate-200/70 shadow-xs divide-y sm:divide-y-0 sm:divide-x divide-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 overflow-hidden">
         <MetricCard
           title="Total Pan-India Files"
           value={metrics.totalApplications}
