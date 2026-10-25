@@ -38,25 +38,39 @@ export const ApprovalDocketModal = ({ application, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-sm p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl max-w-3xl w-full shadow-2xl border border-slate-300 overflow-hidden my-6">
-        {/* Top Control Bar - Styled in Central AICTE Sovereign Rose-Navy Gradient Theme */}
-        <div className="bg-gradient-to-r from-rose-900 via-rose-800 to-[#0c2340] text-white px-6 py-3.5 flex items-center justify-between no-print border-b border-rose-950/30">
-          <div className="flex items-center gap-2.5 text-xs font-semibold">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
-            <span className="font-bold tracking-wide">Official Government AICTE Approval Docket (Generated & Sealed)</span>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-2 sm:p-4 overflow-y-auto">
+      {/* Outer Floating Close Button for easy mobile / desktop exit */}
+      <button
+        onClick={onClose}
+        className="fixed top-4 right-4 z-50 w-10 h-10 rounded-full bg-slate-900 text-white hover:bg-slate-800 flex items-center justify-center shadow-2xl border border-slate-700 transition cursor-pointer"
+        title="Close (Esc)"
+        aria-label="Close"
+      >
+        <X className="w-5 h-5 stroke-[2.5]" />
+      </button>
+
+      <div className="relative bg-white rounded-2xl max-w-3xl w-full shadow-2xl border border-slate-300 overflow-hidden my-4 sm:my-6">
+        {/* Top Control Bar */}
+        <div className="sticky top-0 z-20 bg-gradient-to-r from-rose-950 via-rose-900 to-[#0c2340] text-white px-4 sm:px-6 py-3.5 flex items-center justify-between no-print border-b border-rose-950/30">
+          <div className="flex items-center gap-2 text-xs font-semibold">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="font-bold tracking-wide truncate max-w-[200px] sm:max-w-none">
+              AICTE Letter of Approval Docket
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={handlePrint}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#ea580c] hover:bg-[#c2410c] text-white text-xs font-bold rounded-xl shadow transition cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-xl shadow transition cursor-pointer"
             >
               <Printer className="w-3.5 h-3.5" />
-              <span>Print / Save PDF</span>
+              <span className="hidden sm:inline">Print / Save PDF</span>
+              <span className="sm:hidden">Print</span>
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 text-rose-200 hover:text-white rounded-lg hover:bg-white/10 transition cursor-pointer"
+              className="p-1.5 text-rose-200 hover:text-white rounded-lg hover:bg-white/20 transition cursor-pointer"
+              title="Close modal"
             >
               <X className="w-5 h-5" />
             </button>

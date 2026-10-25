@@ -169,25 +169,36 @@ export const ApplicationWizard = ({ onCreated, onCancel }) => {
   return (
     <div className="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden w-full my-4">
       {/* Wizard Header */}
-      <div className="bg-[#0c2340] text-white p-6">
-        <div className="flex items-center justify-between">
-          <div>
+      <div className="bg-[#0c2340] text-white p-5 sm:p-6 relative">
+        <div className="flex items-start sm:items-center justify-between gap-3">
+          <div className="pr-10 sm:pr-0">
             <div className="flex items-center gap-2 text-xs text-orange-400 font-bold uppercase tracking-wider mb-1">
               <span>Step {currentStep} of 4</span>
               <span>•</span>
-              <span>AICTE Approval Process Handbook (APH 2024-27)</span>
+              <span className="hidden sm:inline">AICTE Approval Process Handbook (APH 2024-27)</span>
+              <span className="sm:hidden">APH 2024-27</span>
             </div>
-            <h2 className="text-xl font-bold tracking-tight">
+            <h2 className="text-lg sm:text-xl font-bold tracking-tight">
               Statutory Application Filing Wizard
             </h2>
           </div>
           {onCancel && (
-            <button
-              onClick={onCancel}
-              className="text-xs text-slate-300 hover:text-white px-3 py-1.5 rounded-lg hover:bg-white/10"
-            >
-              Close Form
-            </button>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={onCancel}
+                className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-slate-200 hover:text-white px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 transition cursor-pointer"
+              >
+                <span>Close Form</span>
+              </button>
+              <button
+                onClick={onCancel}
+                className="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition cursor-pointer"
+                title="Close"
+                aria-label="Close Form"
+              >
+                <X className="w-5 h-5 stroke-[2.5]" />
+              </button>
+            </div>
           )}
         </div>
 
