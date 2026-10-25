@@ -11,6 +11,7 @@ import {
   TrendingUp,
   Clock,
   Layers,
+  CheckCircle,
 } from 'lucide-react';
 import { adminAPI, applicationAPI } from '../../services/api';
 import { useApp } from '../../context/AppContext';
