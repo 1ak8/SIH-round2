@@ -54,9 +54,9 @@ export const CollegeDashboard = () => {
         targetApp = allApps.find((a) => a.applicationId === activeApp.applicationId);
       }
 
-      // If not found, pick the most recent one filed by College
+      // Default to the flagship application with complete radar & deficiency data
       if (!targetApp && allApps.length > 0) {
-        targetApp = allApps[0];
+        targetApp = allApps.find((a) => a.applicationId === 'AICTE-2026-C-1042') || allApps[0];
       }
 
       if (targetApp) {

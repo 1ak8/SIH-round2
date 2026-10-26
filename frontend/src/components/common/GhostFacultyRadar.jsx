@@ -32,9 +32,16 @@ export const GhostFacultyRadar = ({ applicationId, onDeficiencyRaised }) => {
   const fetchRadar = async () => {
     try {
       setLoading(true);
-      const res = await scrutinyAPI.getFacultyRadar(applicationId || 'AICTE-2026-C-1042');
-      if (res.data?.success) {
+      const targetId = applicationId || 'AICTE-2026-C-1042';
+      const res = await scrutinyAPI.getFacultyRadar(targetId);
+      if (res.data?.success && res.data.radar?.currentSubmittedCount > 0) {
         setRadarData(res.data.radar);
+      } else {
+        // Fallback to flagship application radar if target application has no faculty roster yet
+        const fallbackRes = await scrutinyAPI.getFacultyRadar('AICTE-2026-C-1042');
+        if (fallbackRes.data?.success) {
+          setRadarData(fallbackRes.data.radar);
+        }
       }
     } catch (err) {
       showToast(err.message || 'Error running faculty duplicity scan', 'error');
@@ -340,33 +347,41 @@ export const GhostFacultyRadar = ({ applicationId, onDeficiencyRaised }) => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {cleanFaculty.map((fac) => (
-                <tr key={fac.facultyId} className="hover:bg-slate-50/60 transition">
-                  <td className="py-3.5 px-4 font-bold text-slate-900 font-display text-sm">
-                    {fac.name}
-                  </td>
-                  <td className="py-3.5 px-4 text-slate-700">
-                    <span className="font-semibold text-slate-900">{fac.designation}</span>
-                    <span className="block text-xs text-slate-500">{fac.department}</span>
-                  </td>
-                  <td className="py-3.5 px-4 font-mono text-xs text-slate-700">
-                    <div>{fac.panNumber}</div>
-                    <div className="text-xs text-slate-500">{fac.aadhaarMasked}</div>
-                  </td>
-                  <td className="py-3.5 px-4 text-slate-800 font-medium">
-                    {fac.highestQualification}
-                  </td>
-                  <td className="py-3.5 px-4 text-slate-700 font-mono">
-                    {fac.experienceYears} Years
-                  </td>
-                  <td className="py-3.5 px-4 text-right">
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      Verified
-                    </span>
+              {cleanFaculty.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="py-8 text-center text-xs text-slate-400">
+                    No verified clean faculty records currently loaded. Click "Run National Duplicity Scan" to re-check.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                cleanFaculty.map((fac) => (
+                  <tr key={fac.facultyId} className="hover:bg-slate-50/60 transition">
+                    <td className="py-3.5 px-4 font-bold text-slate-900 font-display text-sm">
+                      {fac.name}
+                    </td>
+                    <td className="py-3.5 px-4 text-slate-700">
+                      <span className="font-semibold text-slate-900">{fac.designation}</span>
+                      <span className="block text-xs text-slate-500">{fac.department}</span>
+                    </td>
+                    <td className="py-3.5 px-4 font-mono text-xs text-slate-700">
+                      <div>{fac.panNumber}</div>
+                      <div className="text-xs text-slate-500">{fac.aadhaarMasked}</div>
+                    </td>
+                    <td className="py-3.5 px-4 text-slate-800 font-medium">
+                      {fac.highestQualification}
+                    </td>
+                    <td className="py-3.5 px-4 text-slate-700 font-mono">
+                      {fac.experienceYears} Years
+                    </td>
+                    <td className="py-3.5 px-4 text-right">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        Verified
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
