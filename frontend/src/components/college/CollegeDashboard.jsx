@@ -36,6 +36,10 @@ export const CollegeDashboard = () => {
   const [selectedUndertaking, setSelectedUndertaking] = useState(null);
   const [showFacultyModal, setShowFacultyModal] = useState(false);
 
+  const [pipelineReset, setPipelineReset] = useState(() => {
+    return localStorage.getItem('aicte_pipeline_is_reset') === 'true';
+  });
+
   useEffect(() => {
     fetchCollegeData();
   }, [refreshKey]);
@@ -43,36 +47,19 @@ export const CollegeDashboard = () => {
   const fetchCollegeData = async (preferredAppId) => {
     try {
       setLoading(true);
-
-      // Check if user has an active reset pipeline state and no explicit preference passed
-      if (!preferredAppId && localStorage.getItem('aicte_college_reset_active') === 'true') {
-        const resetDataStr = localStorage.getItem('aicte_college_reset_data');
-        if (resetDataStr) {
-          try {
-            const parsed = JSON.parse(resetDataStr);
-            setActiveApp(parsed);
-            setDocuments(parsed.documents || []);
-            setUndertakings(parsed.undertakings || []);
-            setLoading(false);
-            return;
-          } catch (e) {
-            console.error('Error parsing reset pipeline state:', e);
-          }
-        }
-      }
-
       // If user selected or just filed an application, fetch that; otherwise get the latest application
       const listRes = await applicationAPI.getAll();
       const allApps = listRes.data?.applications || [];
 
-      // Check stored preference or active state
-      const targetAppId = preferredAppId || localStorage.getItem('aicte_college_active_app_id');
-      let targetApp = null;
+      // Check stored preference for newly filed application
+      const storedAppId = localStorage.getItem('aicte_college_active_app_id');
 
-      if (targetAppId) {
-        targetApp = allApps.find((a) => a.applicationId === targetAppId);
-      }
-      if (!targetApp && activeApp?.applicationId) {
+      let targetApp = null;
+      if (preferredAppId) {
+        targetApp = allApps.find((a) => a.applicationId === preferredAppId);
+      } else if (storedAppId) {
+        targetApp = allApps.find((a) => a.applicationId === storedAppId);
+      } else if (activeApp?.applicationId) {
         targetApp = allApps.find((a) => a.applicationId === activeApp.applicationId);
       }
 
@@ -82,10 +69,6 @@ export const CollegeDashboard = () => {
       }
 
       if (targetApp) {
-        localStorage.removeItem('aicte_college_reset_active');
-        localStorage.removeItem('aicte_college_reset_data');
-        localStorage.setItem('aicte_college_active_app_id', targetApp.applicationId);
-
         const appRes = await applicationAPI.getById(targetApp.applicationId);
         if (appRes.data?.success) {
           setActiveApp(appRes.data.application);
@@ -104,51 +87,9 @@ export const CollegeDashboard = () => {
   };
 
   const handleResetPipeline = () => {
-    const cleanResetState = {
-      _id: null,
-      applicationId: 'None (Draft Ready)',
-      institutionName: 'Apex Institute of Technology, Bhopal',
-      applicationType: 'Not Filed Yet',
-      academicYear: '2026-2027',
-      region: 'Central',
-      status: 'Not Started',
-      stage: 'Not Started',
-      deficiencies: [],
-      sla: null,
-      infrastructureDetails: {
-        landAreaAcres: 6.2,
-        builtUpAreaSqMtr: 14500,
-        totalClassrooms: 36,
-        totalLabs: 24,
-        computerCount: 550,
-        internetBandwidthMbps: 1000,
-        latitude: 23.2599,
-        longitude: 77.4126,
-        address: 'Bhadbhada Road, Suraj Nagar, Bhopal, MP - 462044',
-      },
-      courses: [],
-      documents: [],
-      undertakings: [],
-      isReset: true,
-    };
-
-    localStorage.setItem('aicte_college_active_app_id', 'RESET');
-    localStorage.setItem('aicte_college_reset_data', JSON.stringify(cleanResetState));
-    localStorage.setItem('aicte_college_reset_active', 'true');
-
-    setActiveApp(cleanResetState);
-    setDocuments([]);
-    setUndertakings([]);
-
-    showToast('🔄 Statutory Approval Pipeline completely reset! Pipeline is now blank and ready for a fresh application.', 'info');
-  };
-
-  const handleLoadFlagshipDemo = () => {
-    localStorage.removeItem('aicte_college_reset_active');
-    localStorage.removeItem('aicte_college_reset_data');
-    localStorage.setItem('aicte_college_active_app_id', 'AICTE-2026-C-1042');
-    fetchCollegeData('AICTE-2026-C-1042');
-    showToast('Loaded AICTE-2026-C-1042 (Flagship Demo with Scrutiny Deficiencies)', 'info');
+    setPipelineReset(true);
+    localStorage.setItem('aicte_pipeline_is_reset', 'true');
+    showToast('🔄 Statutory Approval Pipeline reset to empty state. File a new application to initiate.', 'info');
   };
 
   const handleSimulateBreach = async () => {
@@ -176,15 +117,15 @@ export const CollegeDashboard = () => {
     return (
       <ApplicationWizard
         onCreated={(newApp) => {
-          localStorage.removeItem('aicte_college_reset_active');
-          localStorage.removeItem('aicte_college_reset_data');
+          setPipelineReset(false);
+          localStorage.removeItem('aicte_pipeline_is_reset');
           if (newApp?.applicationId) {
             localStorage.setItem('aicte_college_active_app_id', newApp.applicationId);
           }
           setActiveApp(newApp);
           setShowWizard(false);
           fetchCollegeData(newApp?.applicationId);
-          showToast(`🎉 Application ${newApp?.applicationId || ''} filed! Pipeline updated to Stage 1: Form Submitted.`, 'success');
+          showToast('🎉 New application submitted! Pipeline updated.', 'success');
         }}
         onCancel={() => setShowWizard(false)}
       />
@@ -221,16 +162,6 @@ export const CollegeDashboard = () => {
             <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
           </button>
 
-          {activeApp?.applicationId !== 'AICTE-2026-C-1042' && (
-            <button
-              onClick={handleLoadFlagshipDemo}
-              className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-xs sm:text-sm font-semibold rounded-xl transition cursor-pointer"
-              title="Switch back to flagship demo college application (AICTE-2026-C-1042)"
-            >
-              <span>Load Demo (C-1042)</span>
-            </button>
-          )}
-
           <button
             onClick={handleOpenDocketModal}
             className="flex items-center gap-2 px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/80 text-xs sm:text-sm font-medium rounded-xl transition shadow-2xs cursor-pointer"
@@ -253,28 +184,26 @@ export const CollegeDashboard = () => {
       <div className="relative bg-white rounded-xl border border-slate-200/70 shadow-xs divide-y sm:divide-y-0 sm:divide-x divide-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 overflow-hidden">
         <MetricCard
           title="Active Application"
-          value={activeApp?.applicationId === 'None (Draft Ready)' ? 'No Active Docket' : activeApp?.applicationId || 'AICTE-2026-C-1042'}
+          value={activeApp?.applicationId || 'AICTE-2026-C-1042'}
           subtitle={activeApp?.applicationType || 'Extension of Approval'}
           icon={FileText}
           variant="navy"
-          badgeText={activeApp?.status === 'Not Started' ? 'Empty' : activeApp?.status || 'Under Scrutiny'}
-          statusHint={activeApp?.status === 'Not Started' ? 'Ready to file fresh application' : 'Official institutional docket'}
+          badgeText={activeApp?.status || 'Under Scrutiny'}
+          statusHint="Official institutional docket"
         />
 
         <MetricCard
           title="Current Stage SLA"
           value={
-            activeApp?.status === 'Not Started'
-              ? 'No Clock Active'
-              : activeApp?.sla?.isOverdue
+            activeApp?.sla?.isOverdue
               ? `${Math.abs(activeApp.sla.daysRemaining)} Days Overdue`
               : `${activeApp?.sla?.daysRemaining || 5} Days Left`
           }
-          subtitle={activeApp?.status === 'Not Started' ? 'Clock starts upon filing' : `Allowed SLA: ${activeApp?.sla?.daysAllowed || 7} working days`}
+          subtitle={`Allowed SLA: ${activeApp?.sla?.daysAllowed || 7} working days`}
           icon={Clock}
-          variant={activeApp?.status === 'Not Started' ? 'default' : activeApp?.sla?.isOverdue ? 'danger' : 'success'}
-          badgeText={activeApp?.status === 'Not Started' ? 'Idle' : activeApp?.sla?.isOverdue ? 'Overdue' : 'On Schedule'}
-          statusHint={activeApp?.status === 'Not Started' ? 'SLA clock is not running' : activeApp?.sla?.isOverdue ? 'Immediate attention needed' : 'Processing within SLA'}
+          variant={activeApp?.sla?.isOverdue ? 'danger' : 'success'}
+          badgeText={activeApp?.sla?.isOverdue ? 'Overdue' : 'On Schedule'}
+          statusHint={activeApp?.sla?.isOverdue ? 'Immediate attention needed' : 'Processing within SLA'}
         />
 
         <MetricCard
@@ -297,23 +226,23 @@ export const CollegeDashboard = () => {
 
         <MetricCard
           title="Expiring Certificates"
-          value={documents.filter((d) => d.validityStatus !== 'Valid').length || 0}
+          value={documents.filter((d) => d.validityStatus !== 'Valid').length || 1}
           subtitle="Land Lease & Fire NOC radar check"
           icon={ShieldCheck}
-          variant={documents.length === 0 ? 'default' : 'saffron'}
-          badgeText={documents.length === 0 ? 'Clear' : 'Radar Alert'}
+          variant="saffron"
+          badgeText="Radar Alert"
           onClick={() => navigateTo('radar')}
-          statusHint={documents.length === 0 ? 'No documents loaded' : 'Compliance watchdog active'}
+          statusHint="Compliance watchdog active"
         />
       </div>
 
       {/* Live Pipeline Stepper */}
       {activeApp && (
         <WorkflowStepper
-          currentStage={activeApp.stage}
-          status={activeApp.status}
-          sla={activeApp.sla}
-          applicationId={activeApp.applicationId}
+          currentStage={pipelineReset ? 'Not Started' : activeApp.stage}
+          status={pipelineReset ? 'Not Started' : activeApp.status}
+          sla={pipelineReset ? null : activeApp.sla}
+          applicationId={pipelineReset ? null : activeApp.applicationId}
           onReset={handleResetPipeline}
         />
       )}
