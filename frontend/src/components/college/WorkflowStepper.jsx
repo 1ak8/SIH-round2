@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, Clock, RotateCcw } from 'lucide-react';
+import { Check, Clock, RotateCcw, Send } from 'lucide-react';
 
 export const WorkflowStepper = ({
   currentStage,
@@ -7,6 +7,7 @@ export const WorkflowStepper = ({
   sla,
   applicationId,
   onReset,
+  onForwardRO,
 }) => {
   const stages = [
     { id: 'Submitted', label: '1. Form Submitted', description: 'Application Locked & Filed' },
@@ -85,6 +86,19 @@ export const WorkflowStepper = ({
                   : `${sla.daysRemaining}d SLA`}
               </span>
             </div>
+          )}
+
+          {/* Forward to RO button: Only visible when form is submitted (Stage 1) */}
+          {(status === 'Submitted' || currentStage === 'Submitted') && onForwardRO && (
+            <button
+              type="button"
+              onClick={onForwardRO}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#0c2340] hover:bg-[#163a66] text-white text-xs font-semibold rounded-xl transition shadow-2xs cursor-pointer active:scale-95"
+              title="Forward submitted application to Regional Officer Scrutiny Desk"
+            >
+              <Send className="w-3.5 h-3.5 text-orange-400" />
+              <span>Forward to RO</span>
+            </button>
           )}
 
           {onReset && (

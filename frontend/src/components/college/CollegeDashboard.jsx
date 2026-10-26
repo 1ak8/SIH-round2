@@ -92,6 +92,19 @@ export const CollegeDashboard = () => {
     showToast('🔄 Statutory Approval Pipeline reset to empty state. File a new application to initiate.', 'info');
   };
 
+  const handleForwardToRO = async () => {
+    if (!activeApp?.applicationId) return;
+    try {
+      const res = await applicationAPI.forwardToRO(activeApp.applicationId);
+      if (res.data?.success) {
+        showToast('🚀 Application forwarded to Regional Officer (RO) Scrutiny Desk! SLA clock started.', 'success');
+        fetchCollegeData(activeApp.applicationId);
+      }
+    } catch (err) {
+      showToast(err.response?.data?.message || err.message || 'Failed to forward to RO', 'error');
+    }
+  };
+
   const handleSimulateBreach = async () => {
     if (!activeApp) return;
     try {
@@ -244,6 +257,7 @@ export const CollegeDashboard = () => {
           sla={pipelineReset ? null : activeApp.sla}
           applicationId={pipelineReset ? null : activeApp.applicationId}
           onReset={handleResetPipeline}
+          onForwardRO={handleForwardToRO}
         />
       )}
 

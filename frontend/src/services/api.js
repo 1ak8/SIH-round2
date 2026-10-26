@@ -46,6 +46,7 @@ export const applicationAPI = {
   simulateSlaBreach: (id, days = 10) =>
     api.post(`/applications/${id}/simulate-breach`, { days }),
   generateDocket: (id) => api.post(`/applications/${id}/generate-docket`),
+  forwardToRO: (id) => api.post(`/applications/${id}/forward-ro`),
 };
 
 // Scrutiny (RO) Endpoints

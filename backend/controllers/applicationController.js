@@ -427,3 +427,51 @@ export const generateDocket = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+export const forwardToRO = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    let app = null;
+    if (getDBStatus()) {
+      app = await Application.findOne({ applicationId: id });
+      if (app) {
+        app.status = 'Under Scrutiny';
+        app.stage = 'Scrutiny';
+        app.assignedRO = app.assignedRO || 'Regional Officer (Bhopal RO)';
+        app.sla = calculateSLA(new Date(), 7);
+        await app.save();
+      }
+    } else {
+      app = memoryStore.applications.find((a) => a.applicationId === id);
+      if (app) {
+        app.status = 'Under Scrutiny';
+        app.stage = 'Scrutiny';
+        app.assignedRO = app.assignedRO || 'Regional Officer (Bhopal RO)';
+        app.sla = calculateSLA(new Date(), 7);
+      }
+    }
+
+    if (!app) {
+      return res.status(404).json({ success: false, message: 'Application not found' });
+    }
+
+    await logAuditEvent({
+      applicationId: id,
+      actorName: req.user?.name || 'College Registrar',
+      role: 'College',
+      action: 'FORWARDED_TO_RO',
+      fromState: 'Submitted',
+      toState: 'Under Scrutiny',
+      remarks: 'Application docket formally forwarded to Regional Officer Scrutiny Desk with SLA clock started.',
+    });
+
+    res.json({
+      success: true,
+      message: 'Application successfully forwarded to RO Scrutiny Desk!',
+      application: app,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

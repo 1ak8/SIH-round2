@@ -6,6 +6,7 @@ import {
   uploadCampusPhoto,
   simulateSlaBreach,
   generateDocket,
+  forwardToRO,
 } from '../controllers/applicationController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import { upload } from '../middleware/uploadMiddleware.js';
@@ -18,5 +19,6 @@ router.post('/', protect, createApplication);
 router.post('/:id/photos', protect, upload.single('photo'), uploadCampusPhoto);
 router.post('/:id/simulate-breach', protect, simulateSlaBreach);
 router.post('/:id/generate-docket', protect, generateDocket);
+router.post('/:id/forward-ro', protect, forwardToRO);
 
 export default router;
