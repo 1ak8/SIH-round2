@@ -1,7 +1,14 @@
 import React from 'react';
-import { Check, Clock, AlertTriangle, ShieldAlert } from 'lucide-react';
+import { Check, Clock, AlertTriangle, ShieldAlert, RotateCcw, Plus } from 'lucide-react';
 
-export const WorkflowStepper = ({ currentStage, status, sla }) => {
+export const WorkflowStepper = ({
+  currentStage,
+  status,
+  sla,
+  applicationId,
+  onReset,
+  onFileNew,
+}) => {
   const stages = [
     { id: 'Submitted', label: '1. Form Submitted', description: 'Application Locked & Filed' },
     { id: 'Scrutiny', label: '2. RO Scrutiny Desk', description: 'Document & Faculty Audit' },
@@ -15,38 +22,91 @@ export const WorkflowStepper = ({ currentStage, status, sla }) => {
     if (appStatus === 'EVC Scheduled' || appStatus === 'EVC Completed' || stage === 'EVC') return 2;
     if (appStatus === 'Under Scrutiny' || appStatus === 'Deficiency Raised' || stage === 'Scrutiny') return 1;
     if (appStatus === 'Submitted' || stage === 'Submitted' || stage === 'Draft') return 0;
-    return 1;
+    return 0;
   };
 
   const activeIndex = getStageIndex(currentStage, status);
 
   return (
     <div className="w-full bg-white rounded-xl border border-slate-200/70 p-5 sm:p-6 shadow-xs">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-6 pb-4 border-b border-slate-100">
         <div>
-          <span className="text-xs font-medium text-slate-400 block mb-0.5">
-            Statutory Approval Pipeline
-          </span>
-          <p className="text-base font-semibold text-slate-900">
-            Current Stage: <span className="text-slate-900 underline underline-offset-4 decoration-slate-300">{stages[activeIndex]?.label}</span>
-          </p>
-        </div>
-        {sla && (
-          <div className="text-right">
+          <div className="flex flex-wrap items-center gap-2 mb-1.5">
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              Statutory Approval Pipeline
+            </span>
+            {applicationId && (
+              <span className="inline-flex items-center px-2 py-0.5 rounded-md font-mono text-[11px] font-semibold bg-slate-100 text-slate-700 border border-slate-200/80">
+                File: {applicationId}
+              </span>
+            )}
             <span
-              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium border ${
-                sla.isOverdue
-                  ? 'bg-rose-50 text-rose-700 border-rose-200/80'
-                  : 'bg-emerald-50 text-emerald-700 border-emerald-200/80'
+              className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold border ${
+                status === 'Approved'
+                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                  : status === 'Submitted'
+                  ? 'bg-blue-50 text-blue-700 border-blue-200'
+                  : status === 'Deficiency Raised'
+                  ? 'bg-rose-50 text-rose-700 border-rose-200'
+                  : 'bg-amber-50 text-amber-700 border-amber-200'
               }`}
             >
-              <Clock className="w-3.5 h-3.5" />
-              {sla.isOverdue
-                ? `Overdue: ${Math.abs(sla.daysRemaining)} days`
-                : `${sla.daysRemaining} days remaining in SLA`}
+              ● {status || 'Submitted'}
             </span>
           </div>
-        )}
+          <p className="text-sm sm:text-base font-semibold text-slate-900 flex flex-wrap items-center gap-2">
+            <span>Current Stage:</span>
+            <span className="text-slate-900 font-bold bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200/70">
+              {stages[activeIndex]?.label}
+            </span>
+            <span className="text-xs text-slate-400 hidden sm:inline">
+              — {stages[activeIndex]?.description}
+            </span>
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          {sla && (
+            <div className="shrink-0">
+              <span
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold border ${
+                  sla.isOverdue
+                    ? 'bg-rose-50 text-rose-700 border-rose-200/80'
+                    : 'bg-emerald-50 text-emerald-700 border-emerald-200/80'
+                }`}
+              >
+                <Clock className="w-3.5 h-3.5" />
+                {sla.isOverdue
+                  ? `Overdue: ${Math.abs(sla.daysRemaining)}d`
+                  : `${sla.daysRemaining}d SLA`}
+              </span>
+            </div>
+          )}
+
+          {onReset && (
+            <button
+              type="button"
+              onClick={onReset}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl border border-slate-300 transition shadow-2xs cursor-pointer active:scale-95"
+              title="Reset Statutory Approval Pipeline to fresh Stage 1 state"
+            >
+              <RotateCcw className="w-3.5 h-3.5 text-slate-600" />
+              <span>Reset Pipeline</span>
+            </button>
+          )}
+
+          {onFileNew && (
+            <button
+              type="button"
+              onClick={onFileNew}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#ea580c] hover:bg-[#c2410c] text-white text-xs font-bold rounded-xl shadow-2xs transition cursor-pointer active:scale-95"
+              title="File a brand new AICTE approval application"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>File New Application</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Stepper Bar */}

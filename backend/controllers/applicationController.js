@@ -133,8 +133,8 @@ export const createApplication = async (req, res) => {
       applicationType: applicationType || 'Extension of Approval (EoA)',
       academicYear,
       region: region || 'Central',
-      status: 'Under Scrutiny',
-      stage: 'Scrutiny',
+      status: 'Submitted',
+      stage: 'Submitted',
       infrastructureDetails: infrastructureDetails || {
         landAreaAcres: 5.0,
         builtUpAreaSqMtr: 12000,
@@ -207,10 +207,30 @@ export const createApplication = async (req, res) => {
       updatedAt: new Date(),
     };
 
+    const docRecords = documents.map((d, idx) => ({
+      _id: `doc_${Date.now()}_${idx}`,
+      applicationId,
+      institutionName: institutionName || 'Apex Institute of Technology, Bhopal',
+      docType: d.docType,
+      fileName: `${(d.docType || 'doc').toLowerCase().replace(/\s+/g, '_')}_2026.pdf`,
+      fileUrl: d.fileUrl || '',
+      issueDate: d.issueDate ? new Date(d.issueDate) : new Date(),
+      expiryDate: d.expiryDate ? new Date(d.expiryDate) : new Date(Date.now() + 365 * 86400000),
+      validityStatus: 'Valid',
+      daysUntilExpiry: 365,
+      uploadedAt: new Date(),
+    }));
+
     if (getDBStatus()) {
       await Application.create(newApp);
+      if (docRecords.length > 0) {
+        await DocumentRecord.insertMany(docRecords);
+      }
     }
     memoryStore.applications.unshift(newApp);
+    if (docRecords.length > 0) {
+      memoryStore.documents.unshift(...docRecords);
+    }
 
     await logAuditEvent({
       applicationId,
@@ -218,7 +238,7 @@ export const createApplication = async (req, res) => {
       role: 'College',
       action: 'APPLICATION_SUBMITTED',
       fromState: 'Draft',
-      toState: 'Under Scrutiny',
+      toState: 'Submitted',
       remarks: `New application submitted for ${applicationType} (${academicYear})`,
     });
 

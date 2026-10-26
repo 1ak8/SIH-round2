@@ -43,14 +43,36 @@ export const CollegeDashboard = () => {
   const fetchCollegeData = async (preferredAppId) => {
     try {
       setLoading(true);
+
+      // Check if user has an active reset pipeline state and no explicit preference passed
+      if (!preferredAppId && localStorage.getItem('aicte_college_reset_active') === 'true') {
+        const resetDataStr = localStorage.getItem('aicte_college_reset_data');
+        if (resetDataStr) {
+          try {
+            const parsed = JSON.parse(resetDataStr);
+            setActiveApp(parsed);
+            setDocuments(parsed.documents || []);
+            setUndertakings(parsed.undertakings || []);
+            setLoading(false);
+            return;
+          } catch (e) {
+            console.error('Error parsing reset pipeline state:', e);
+          }
+        }
+      }
+
       // If user selected or just filed an application, fetch that; otherwise get the latest application
       const listRes = await applicationAPI.getAll();
       const allApps = listRes.data?.applications || [];
 
+      // Check stored preference or active state
+      const targetAppId = preferredAppId || localStorage.getItem('aicte_college_active_app_id');
       let targetApp = null;
-      if (preferredAppId) {
-        targetApp = allApps.find((a) => a.applicationId === preferredAppId);
-      } else if (activeApp?.applicationId) {
+
+      if (targetAppId) {
+        targetApp = allApps.find((a) => a.applicationId === targetAppId);
+      }
+      if (!targetApp && activeApp?.applicationId) {
         targetApp = allApps.find((a) => a.applicationId === activeApp.applicationId);
       }
 
@@ -60,6 +82,10 @@ export const CollegeDashboard = () => {
       }
 
       if (targetApp) {
+        localStorage.removeItem('aicte_college_reset_active');
+        localStorage.removeItem('aicte_college_reset_data');
+        localStorage.setItem('aicte_college_active_app_id', targetApp.applicationId);
+
         const appRes = await applicationAPI.getById(targetApp.applicationId);
         if (appRes.data?.success) {
           setActiveApp(appRes.data.application);
@@ -75,6 +101,113 @@ export const CollegeDashboard = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleResetPipeline = () => {
+    const resetAppId = `AICTE-2026-C-${Math.floor(1000 + Math.random() * 9000)}`;
+    const cleanResetState = {
+      _id: `app_reset_${Date.now()}`,
+      applicationId: resetAppId,
+      institutionName: 'Apex Institute of Technology, Bhopal',
+      applicationType: 'Extension of Approval (EoA)',
+      academicYear: '2026-2027',
+      region: 'Central',
+      status: 'Submitted',
+      stage: 'Submitted',
+      deficiencies: [],
+      sla: {
+        daysRemaining: 7,
+        daysSpent: 0,
+        daysAllowed: 7,
+        isOverdue: false,
+      },
+      infrastructureDetails: {
+        landAreaAcres: 6.2,
+        builtUpAreaSqMtr: 14500,
+        totalClassrooms: 36,
+        totalLabs: 24,
+        computerCount: 550,
+        internetBandwidthMbps: 1000,
+        latitude: 23.2599,
+        longitude: 77.4126,
+        address: 'Bhadbhada Road, Suraj Nagar, Bhopal, MP - 462044',
+      },
+      courses: [
+        {
+          courseName: 'B.Tech',
+          branch: 'Computer Science & Engineering',
+          level: 'UG',
+          proposedIntake: 180,
+          approvedIntake: 180,
+        },
+        {
+          courseName: 'B.Tech',
+          branch: 'Artificial Intelligence & Data Science',
+          level: 'UG',
+          proposedIntake: 60,
+          approvedIntake: 60,
+        },
+        {
+          courseName: 'B.Tech',
+          branch: 'Electronics & Communication',
+          level: 'UG',
+          proposedIntake: 60,
+          approvedIntake: 60,
+        },
+      ],
+      documents: [
+        {
+          _id: 'doc_reset_1',
+          applicationId: resetAppId,
+          docType: 'Land Lease Deed',
+          fileName: 'land_lease_deed_2026.pdf',
+          validityStatus: 'Valid',
+          daysUntilExpiry: 365,
+          issueDate: new Date('2021-04-10'),
+          expiryDate: new Date('2028-12-31'),
+        },
+        {
+          _id: 'doc_reset_2',
+          applicationId: resetAppId,
+          docType: 'Fire Safety NOC',
+          fileName: 'fire_safety_noc_2026.pdf',
+          validityStatus: 'Valid',
+          daysUntilExpiry: 240,
+          issueDate: new Date('2025-01-15'),
+          expiryDate: new Date('2027-01-14'),
+        },
+        {
+          _id: 'doc_reset_3',
+          applicationId: resetAppId,
+          docType: 'Building Structural Stability',
+          fileName: 'structural_stability_2026.pdf',
+          validityStatus: 'Valid',
+          daysUntilExpiry: 450,
+          issueDate: new Date('2024-03-20'),
+          expiryDate: new Date('2028-03-19'),
+        },
+      ],
+      undertakings: [],
+      isReset: true,
+    };
+
+    localStorage.setItem('aicte_college_active_app_id', resetAppId);
+    localStorage.setItem('aicte_college_reset_data', JSON.stringify(cleanResetState));
+    localStorage.setItem('aicte_college_reset_active', 'true');
+
+    setActiveApp(cleanResetState);
+    setDocuments(cleanResetState.documents);
+    setUndertakings([]);
+
+    showToast('🔄 Statutory Approval Pipeline reset to Stage 1 (Ready to File). You can now file a fresh application.', 'info');
+  };
+
+  const handleLoadFlagshipDemo = () => {
+    localStorage.removeItem('aicte_college_reset_active');
+    localStorage.removeItem('aicte_college_reset_data');
+    localStorage.setItem('aicte_college_active_app_id', 'AICTE-2026-C-1042');
+    fetchCollegeData('AICTE-2026-C-1042');
+    showToast('Loaded AICTE-2026-C-1042 (Flagship Demo with Scrutiny Deficiencies)', 'info');
   };
 
   const handleSimulateBreach = async () => {
@@ -102,9 +235,15 @@ export const CollegeDashboard = () => {
     return (
       <ApplicationWizard
         onCreated={(newApp) => {
+          localStorage.removeItem('aicte_college_reset_active');
+          localStorage.removeItem('aicte_college_reset_data');
+          if (newApp?.applicationId) {
+            localStorage.setItem('aicte_college_active_app_id', newApp.applicationId);
+          }
           setActiveApp(newApp);
           setShowWizard(false);
           fetchCollegeData(newApp?.applicationId);
+          showToast(`🎉 Application ${newApp?.applicationId || ''} filed! Pipeline updated to Stage 1: Form Submitted.`, 'success');
         }}
         onCancel={() => setShowWizard(false)}
       />
@@ -140,6 +279,16 @@ export const CollegeDashboard = () => {
             <span>Ghost Faculty Radar</span>
             <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" />
           </button>
+
+          {activeApp?.applicationId !== 'AICTE-2026-C-1042' && (
+            <button
+              onClick={handleLoadFlagshipDemo}
+              className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-xs sm:text-sm font-semibold rounded-xl transition cursor-pointer"
+              title="Switch back to flagship demo college application (AICTE-2026-C-1042)"
+            >
+              <span>Load Demo (C-1042)</span>
+            </button>
+          )}
 
           <button
             onClick={handleOpenDocketModal}
@@ -221,6 +370,9 @@ export const CollegeDashboard = () => {
           currentStage={activeApp.stage}
           status={activeApp.status}
           sla={activeApp.sla}
+          applicationId={activeApp.applicationId}
+          onReset={handleResetPipeline}
+          onFileNew={() => setShowWizard(true)}
         />
       )}
 
