@@ -104,23 +104,17 @@ export const CollegeDashboard = () => {
   };
 
   const handleResetPipeline = () => {
-    const resetAppId = `AICTE-2026-C-${Math.floor(1000 + Math.random() * 9000)}`;
     const cleanResetState = {
-      _id: `app_reset_${Date.now()}`,
-      applicationId: resetAppId,
+      _id: null,
+      applicationId: 'None (Draft Ready)',
       institutionName: 'Apex Institute of Technology, Bhopal',
-      applicationType: 'Extension of Approval (EoA)',
+      applicationType: 'Not Filed Yet',
       academicYear: '2026-2027',
       region: 'Central',
-      status: 'Submitted',
-      stage: 'Submitted',
+      status: 'Not Started',
+      stage: 'Not Started',
       deficiencies: [],
-      sla: {
-        daysRemaining: 7,
-        daysSpent: 0,
-        daysAllowed: 7,
-        isOverdue: false,
-      },
+      sla: null,
       infrastructureDetails: {
         landAreaAcres: 6.2,
         builtUpAreaSqMtr: 14500,
@@ -132,74 +126,21 @@ export const CollegeDashboard = () => {
         longitude: 77.4126,
         address: 'Bhadbhada Road, Suraj Nagar, Bhopal, MP - 462044',
       },
-      courses: [
-        {
-          courseName: 'B.Tech',
-          branch: 'Computer Science & Engineering',
-          level: 'UG',
-          proposedIntake: 180,
-          approvedIntake: 180,
-        },
-        {
-          courseName: 'B.Tech',
-          branch: 'Artificial Intelligence & Data Science',
-          level: 'UG',
-          proposedIntake: 60,
-          approvedIntake: 60,
-        },
-        {
-          courseName: 'B.Tech',
-          branch: 'Electronics & Communication',
-          level: 'UG',
-          proposedIntake: 60,
-          approvedIntake: 60,
-        },
-      ],
-      documents: [
-        {
-          _id: 'doc_reset_1',
-          applicationId: resetAppId,
-          docType: 'Land Lease Deed',
-          fileName: 'land_lease_deed_2026.pdf',
-          validityStatus: 'Valid',
-          daysUntilExpiry: 365,
-          issueDate: new Date('2021-04-10'),
-          expiryDate: new Date('2028-12-31'),
-        },
-        {
-          _id: 'doc_reset_2',
-          applicationId: resetAppId,
-          docType: 'Fire Safety NOC',
-          fileName: 'fire_safety_noc_2026.pdf',
-          validityStatus: 'Valid',
-          daysUntilExpiry: 240,
-          issueDate: new Date('2025-01-15'),
-          expiryDate: new Date('2027-01-14'),
-        },
-        {
-          _id: 'doc_reset_3',
-          applicationId: resetAppId,
-          docType: 'Building Structural Stability',
-          fileName: 'structural_stability_2026.pdf',
-          validityStatus: 'Valid',
-          daysUntilExpiry: 450,
-          issueDate: new Date('2024-03-20'),
-          expiryDate: new Date('2028-03-19'),
-        },
-      ],
+      courses: [],
+      documents: [],
       undertakings: [],
       isReset: true,
     };
 
-    localStorage.setItem('aicte_college_active_app_id', resetAppId);
+    localStorage.setItem('aicte_college_active_app_id', 'RESET');
     localStorage.setItem('aicte_college_reset_data', JSON.stringify(cleanResetState));
     localStorage.setItem('aicte_college_reset_active', 'true');
 
     setActiveApp(cleanResetState);
-    setDocuments(cleanResetState.documents);
+    setDocuments([]);
     setUndertakings([]);
 
-    showToast('🔄 Statutory Approval Pipeline reset to Stage 1 (Ready to File). You can now file a fresh application.', 'info');
+    showToast('🔄 Statutory Approval Pipeline completely reset! Pipeline is now blank and ready for a fresh application.', 'info');
   };
 
   const handleLoadFlagshipDemo = () => {
@@ -312,26 +253,28 @@ export const CollegeDashboard = () => {
       <div className="relative bg-white rounded-xl border border-slate-200/70 shadow-xs divide-y sm:divide-y-0 sm:divide-x divide-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 overflow-hidden">
         <MetricCard
           title="Active Application"
-          value={activeApp?.applicationId || 'AICTE-2026-C-1042'}
+          value={activeApp?.applicationId === 'None (Draft Ready)' ? 'No Active Docket' : activeApp?.applicationId || 'AICTE-2026-C-1042'}
           subtitle={activeApp?.applicationType || 'Extension of Approval'}
           icon={FileText}
           variant="navy"
-          badgeText={activeApp?.status || 'Under Scrutiny'}
-          statusHint="Official institutional docket"
+          badgeText={activeApp?.status === 'Not Started' ? 'Empty' : activeApp?.status || 'Under Scrutiny'}
+          statusHint={activeApp?.status === 'Not Started' ? 'Ready to file fresh application' : 'Official institutional docket'}
         />
 
         <MetricCard
           title="Current Stage SLA"
           value={
-            activeApp?.sla?.isOverdue
+            activeApp?.status === 'Not Started'
+              ? 'No Clock Active'
+              : activeApp?.sla?.isOverdue
               ? `${Math.abs(activeApp.sla.daysRemaining)} Days Overdue`
               : `${activeApp?.sla?.daysRemaining || 5} Days Left`
           }
-          subtitle={`Allowed SLA: ${activeApp?.sla?.daysAllowed || 7} working days`}
+          subtitle={activeApp?.status === 'Not Started' ? 'Clock starts upon filing' : `Allowed SLA: ${activeApp?.sla?.daysAllowed || 7} working days`}
           icon={Clock}
-          variant={activeApp?.sla?.isOverdue ? 'danger' : 'success'}
-          badgeText={activeApp?.sla?.isOverdue ? 'Overdue' : 'On Schedule'}
-          statusHint={activeApp?.sla?.isOverdue ? 'Immediate attention needed' : 'Processing within SLA'}
+          variant={activeApp?.status === 'Not Started' ? 'default' : activeApp?.sla?.isOverdue ? 'danger' : 'success'}
+          badgeText={activeApp?.status === 'Not Started' ? 'Idle' : activeApp?.sla?.isOverdue ? 'Overdue' : 'On Schedule'}
+          statusHint={activeApp?.status === 'Not Started' ? 'SLA clock is not running' : activeApp?.sla?.isOverdue ? 'Immediate attention needed' : 'Processing within SLA'}
         />
 
         <MetricCard
@@ -354,13 +297,13 @@ export const CollegeDashboard = () => {
 
         <MetricCard
           title="Expiring Certificates"
-          value={documents.filter((d) => d.validityStatus !== 'Valid').length || 1}
+          value={documents.filter((d) => d.validityStatus !== 'Valid').length || 0}
           subtitle="Land Lease & Fire NOC radar check"
           icon={ShieldCheck}
-          variant="saffron"
-          badgeText="Radar Alert"
+          variant={documents.length === 0 ? 'default' : 'saffron'}
+          badgeText={documents.length === 0 ? 'Clear' : 'Radar Alert'}
           onClick={() => navigateTo('radar')}
-          statusHint="Compliance watchdog active"
+          statusHint={documents.length === 0 ? 'No documents loaded' : 'Compliance watchdog active'}
         />
       </div>
 

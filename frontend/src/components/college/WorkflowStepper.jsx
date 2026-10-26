@@ -15,13 +15,16 @@ export const WorkflowStepper = ({
     { id: 'Final Decision', label: '4. Council Approval', description: 'Digital Docket Sealed' },
   ];
 
-  // Accurate stage resolution: Never show EVC as active or completed if status is Under Scrutiny!
+  // Accurate stage resolution:
+  const isResetOrNotStarted = status === 'Not Started' || currentStage === 'Not Started' || !status;
+
   const getStageIndex = (stage, appStatus) => {
+    if (appStatus === 'Not Started' || stage === 'Not Started') return -1;
     if (appStatus === 'Approved') return 3;
     if (appStatus === 'EVC Scheduled' || appStatus === 'EVC Completed' || stage === 'EVC') return 2;
     if (appStatus === 'Under Scrutiny' || appStatus === 'Deficiency Raised' || stage === 'Scrutiny') return 1;
-    if (appStatus === 'Submitted' || stage === 'Submitted' || stage === 'Draft') return 0;
-    return 0;
+    if (appStatus === 'Submitted' || stage === 'Submitted') return 0;
+    return -1;
   };
 
   const activeIndex = getStageIndex(currentStage, status);
@@ -41,7 +44,9 @@ export const WorkflowStepper = ({
             )}
             <span
               className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold border ${
-                status === 'Approved'
+                isResetOrNotStarted
+                  ? 'bg-slate-100 text-slate-500 border-slate-200'
+                  : status === 'Approved'
                   ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                   : status === 'Submitted'
                   ? 'bg-blue-50 text-blue-700 border-blue-200'
@@ -50,16 +55,16 @@ export const WorkflowStepper = ({
                   : 'bg-amber-50 text-amber-700 border-amber-200'
               }`}
             >
-              ● {status || 'Submitted'}
+              ● {isResetOrNotStarted ? 'Pipeline Reset / Empty' : status || 'Submitted'}
             </span>
           </div>
           <p className="text-sm sm:text-base font-semibold text-slate-900 flex flex-wrap items-center gap-2">
             <span>Current Stage:</span>
             <span className="text-slate-900 font-bold bg-slate-100 px-2 py-0.5 rounded-lg border border-slate-200/70">
-              {stages[activeIndex]?.label}
+              {isResetOrNotStarted ? 'Ready to File (No Active Application)' : stages[activeIndex]?.label}
             </span>
             <span className="text-xs text-slate-400 hidden sm:inline">
-              — {stages[activeIndex]?.description}
+              — {isResetOrNotStarted ? 'All pipeline stages are reset. Click "File Application" above to begin.' : stages[activeIndex]?.description}
             </span>
           </p>
         </div>
@@ -102,13 +107,13 @@ export const WorkflowStepper = ({
         <div className="absolute left-8 right-8 top-4 h-[2px] bg-slate-100 -z-0">
           <div
             className="h-full bg-slate-900 transition-all duration-500 rounded-full"
-            style={{ width: `${(activeIndex / (stages.length - 1)) * 100}%` }}
+            style={{ width: `${activeIndex >= 0 ? (activeIndex / (stages.length - 1)) * 100 : 0}%` }}
           />
         </div>
 
         {stages.map((stage, idx) => {
-          const isCompleted = idx < activeIndex || (status === 'Approved' && idx === 3);
-          const isCurrent = idx === activeIndex && status !== 'Approved';
+          const isCompleted = activeIndex >= 0 && (idx < activeIndex || (status === 'Approved' && idx === 3));
+          const isCurrent = activeIndex >= 0 && idx === activeIndex && status !== 'Approved';
 
           return (
             <div
