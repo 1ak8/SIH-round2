@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, Clock, AlertTriangle, ShieldAlert, RotateCcw, Plus } from 'lucide-react';
+import { Check, Clock, RotateCcw } from 'lucide-react';
 
 export const WorkflowStepper = ({
   currentStage,
@@ -7,7 +7,6 @@ export const WorkflowStepper = ({
   sla,
   applicationId,
   onReset,
-  onFileNew,
 }) => {
   const stages = [
     { id: 'Submitted', label: '1. Form Submitted', description: 'Application Locked & Filed' },
@@ -92,18 +91,6 @@ export const WorkflowStepper = ({
             >
               <RotateCcw className="w-3.5 h-3.5 text-slate-600" />
               <span>Reset Pipeline</span>
-            </button>
-          )}
-
-          {onFileNew && (
-            <button
-              type="button"
-              onClick={onFileNew}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#ea580c] hover:bg-[#c2410c] text-white text-xs font-bold rounded-xl shadow-2xs transition cursor-pointer active:scale-95"
-              title="File a brand new AICTE approval application"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>File New Application</span>
             </button>
           )}
         </div>

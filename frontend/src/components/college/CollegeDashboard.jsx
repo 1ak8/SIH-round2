@@ -372,7 +372,6 @@ export const CollegeDashboard = () => {
           sla={activeApp.sla}
           applicationId={activeApp.applicationId}
           onReset={handleResetPipeline}
-          onFileNew={() => setShowWizard(true)}
         />
       )}
 
